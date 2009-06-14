@@ -1,0 +1,4 @@
+CSparseJ changelog
+
+1.0:	June 13, 2009
+	- Initial release.
