@@ -49,7 +49,8 @@ public class Zcs_qr {
      * @return numeric QR factorization, null on error
      */
     public static Zcsn cs_qr(Zcs A, Zcss S) {
-        Complex Rx[], Vx[], Ax[], x[], Beta[];
+        Complex Rx[], Vx[], Ax[], x[];
+        double Beta[];
         int i, k, p, n, vnz, p1, top, m2, len, col, rnz, s[], leftmost[], Ap[], Ai[], parent[], Rp[], Ri[], Vp[], Vi[], w[], pinv[], q[];
         Zcs R, V;
         Zcsn N;
@@ -75,7 +76,7 @@ public class Zcs_qr {
             x[k] = Complex.ZERO; /* clear workspace x */
         N.L = V = Zcs_util.cs_spalloc(m2, n, vnz, true, false); /* allocate result V */
         N.U = R = Zcs_util.cs_spalloc(m2, n, rnz, true, false); /* allocate result R */
-        N.B = Beta = new Complex[n]; /* allocate result Beta */
+        N.B = Beta = new double[n]; /* allocate result Beta */
         Rp = R.p;
         Ri = R.i;
         Rx = R.x;
@@ -128,9 +129,11 @@ public class Zcs_qr {
                 x[Vi[p]] = Complex.ZERO;
             }
             Ri[rnz] = k; /* R(k,k) = norm (x) */
-            Complex[] beta = new Complex[1];
+            double[] beta = new double[1];
             beta[0] = Beta[k];
-            Rx[rnz++] = Zcs_house.cs_house(Vx, p1, beta, vnz - p1); /* [v,beta]=house(x) */
+            Complex[] vx = new Complex[1];
+            vx[0] = Vx[p1];
+            Rx[rnz++] = Zcs_house.cs_house(vx, beta, vnz - p1); /* [v,beta]=house(x) */
             Beta[k] = beta[0];
         }
         Rp[n] = rnz; /* finalize R */

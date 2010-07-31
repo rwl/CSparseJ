@@ -38,8 +38,8 @@ import edu.emory.mathcs.csparsej.tdcomplex.Zcs_common.Zcs;
 public class Zcs_updown {
 
     /**
-     * Sparse Cholesky rank-1 update/downdate, L*L' + sigma*w*w' (sigma = +1 or
-     * -1)
+     * Sparse Cholesky rank-1 update/downdate, L*L' + sigma*w*w' (sigma = +1 or -1).
+     * Note that this CXSparseJ version is different than CSparseJ.
      *
      * @param L
      *            factorization to update/downdate
@@ -53,8 +53,8 @@ public class Zcs_updown {
      */
     public static boolean cs_updown(Zcs L, int sigma, Zcs C, int[] parent) {
         int n, p, f, j, Lp[], Li[], Cp[], Ci[];
-        Complex Lx[], Cx[], alpha, gamma, w1, w2, w[];
-        double beta = 1, delta, beta2 = 1, phase;
+        Complex Lx[], Cx[], alpha, gamma, w1, w2, w[], phase;
+        double beta = 1, delta, beta2 = 1;
         if (!Zcs_util.CS_CSC(L) || !Zcs_util.CS_CSC(C) || parent == null)
             return (false); /* check inputs */
         Lp = L.p;
@@ -78,20 +78,21 @@ public class Zcs_updown {
         {
             p = Lp[j];
             alpha = w[j].divide(Lx[p]); /* alpha = w(j) / L(j,j) */
-            beta2 = beta * beta + sigma * alpha.multiply(alpha.conjugate());
+            /* CXSparseJ */
+            beta2 = beta*beta + sigma * alpha.multiply(alpha.conjugate()).getReal();
             if (beta2 <= 0)
                 break; /* not positive definite */
             beta2 = Math.sqrt(beta2);
             delta = (sigma > 0) ? (beta / beta2) : (beta2 / beta);
-            gamma = sigma * alpha / (beta2 * beta);
-            Lx[p] = delta * Lx[p] + ((sigma > 0) ? (gamma.multiply(w[j])) : Complex.ZERO);
+            gamma = alpha.multiply(sigma).divide(new Complex(beta2 * beta, 0.0));
+            Lx[p] = Lx[p].multiply(delta).add(((sigma > 0) ? (gamma.multiply(w[j])) : Complex.ZERO));
             beta = beta2;
             /* CXSparseJ */
-            phase = Lx[p].divide(Lx[p]).abs(); /* phase = abs(L(j,j))/L(j,j) */
+            phase = new Complex(Lx[p].divide(Lx[p]).abs(), 0.0); /* phase = abs(L(j,j))/L(j,j) */
             Lx[p] = Lx[p].multiply(phase); /* L(j,j) = L(j,j) * phase */
             for (p++; p < Lp[j + 1]; p++) {
                 w1 = w[Li[p]];
-                w[Li[p]] = w2 = w1 - alpha * Lx[p];
+                w[Li[p]] = w2 = w1.subtract(alpha.multiply(Lx[p]));
                 Lx[p] = Lx[p].multiply(delta).add(gamma.multiply(((sigma > 0) ? w1 : w2)));
                 /* CXSparseJ */
                 Lx[p] = Lx[p].multiply(phase); /* L(i,j) = L(i,j) * phase */

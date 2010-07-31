@@ -36,35 +36,37 @@ import org.apache.commons.math.complex.Complex;
 public class Zcs_house {
 
     /**
-     * Compute a Householder reflection, overwrite x with v, where
-     * (I-beta*v*v')*x = s*e1. See Algo 5.1.1, Golub & Van Loan, 3rd ed.
+     * Compute a Householder reflection [v,beta,s]=house(x), overwrite x with v,
+     * where (I-beta*v*v')*x = s*e1 and e1 = [1 0 ... 0]'.
+     * Note that this CXSparseJ version is different than CSparseJ.  See Higham,
+     * Accuracy & Stability of Num Algorithms, 2nd ed, 2002, page 357.
      *
      * @param x
      *            x on output, v on input
-     * @param x_offset
-     *            the index of the first element in array x
      * @param beta
      *            scalar beta
      * @param n
      *            the length of x
      * @return norm2(x), -1 on error
      */
-    public static double cs_house(Complex[] x, int x_offset, double[] beta, int n) {
-        double s;
-        Complex sigma = Complex.ZERO;
+    public static Complex cs_house(Complex[] x, double[] beta, int n) {
+        Complex s = Complex.ZERO;
         int i;
-        if (x == null || beta == null)
-            return (-1); /* check inputs */
+        if (x == null)
+            return Complex.ONE.multiply(-1.0); /* check inputs */
         for (i = 1; i < n; i++)
-            sigma = sigma.add(x[x_offset + i].multiply(x[x_offset + i]));
-        if (sigma == Complex.ZERO) {
-            s = x[x_offset + 0].abs(); /* s = |x(0)| */
-            beta[0] = (x[x_offset + 0] <= 0) ? 2.0 : 0.0;
-            x[x_offset + 0] = 1;
+            s = s.add(x[i].multiply(x[i].conjugate()));
+        s = s.sqrt();
+        if (s.equals(Complex.ZERO)) {
+            beta[0] = 0.0;
+            x[0] = Complex.ONE;
         } else {
-            s = Math.sqrt(x[x_offset + 0] * x[x_offset + 0] + sigma); /* s = norm (x) */
-            x[x_offset + 0] = (x[x_offset + 0] <= 0) ? (x[x_offset + 0] - s) : (-sigma / (x[x_offset + 0] + s));
-            beta[0] = -1.0 / (s * x[x_offset + 0]);
+            /* s = sign(x[0]) * norm (x) ; */
+            if (!x[0].equals(Complex.ZERO)) {
+                s = s.multiply(x[0].divide(new Complex(x[0].abs(), 0.0)));
+            }
+            x[0] = x[0].add(s);
+            beta[0] = 1 / s.conjugate().multiply(x[0]).getReal();
         }
         return (s);
     }

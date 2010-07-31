@@ -163,7 +163,7 @@ public class Zcs_common {
         /**
          * beta [0..n-1] for QR
          */
-        public Complex[] B;
+        public double[] B;
 
         public Zcsn() {
         }

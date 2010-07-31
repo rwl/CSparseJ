@@ -51,7 +51,7 @@ public class Zcs_happly {
      *            vector x of size m
      * @return true if successful, false on error
      */
-    public static boolean cs_happly(Zcs V, int i, Complex beta, Complex[] x) {
+    public static boolean cs_happly(Zcs V, int i, double beta, Complex[] x) {
         int p, Vp[], Vi[];
         Complex Vx[], tau = Complex.ZERO;
         if (!Zcs_util.CS_CSC(V) || x == null)
