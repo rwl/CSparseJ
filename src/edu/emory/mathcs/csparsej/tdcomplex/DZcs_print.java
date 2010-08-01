@@ -24,8 +24,7 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
-import org.apache.commons.math.complex.Complex;
-
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
 
 /**
@@ -48,7 +47,7 @@ public class DZcs_print {
      */
     public static boolean cs_print(DZcs A, boolean brief) {
         int p, j, m, n, nzmax, nz, Ap[], Ai[];
-        Complex Ax[];
+        DZcsa Ax = new DZcsa();
         if (A == null) {
             System.out.print("(null)\n");
             return (false);
@@ -57,7 +56,7 @@ public class DZcs_print {
         n = A.n;
         Ap = A.p;
         Ai = A.i;
-        Ax = A.x;
+        Ax.x = A.x;
         nzmax = A.nzmax;
         nz = A.nz;
         System.out.print(String.format("CSparseJ Version %d.%d.%d, %s.  %s\n", DZcs_common.CS_VER, DZcs_common.CS_SUBVER,
@@ -68,7 +67,7 @@ public class DZcs_print {
             for (j = 0; j < n; j++) {
                 System.out.print(String.format("    col %d : locations %d to %d\n", j, Ap[j], Ap[j + 1] - 1));
                 for (p = Ap[j]; p < Ap[j + 1]; p++) {
-                    System.out.print(String.format("      %d : %g\n", Ai[p], Ax != null ? Ax[p] : 1));
+                    System.out.print(String.format("      %d : %g\n", Ai[p], Ax.x != null ? Ax.get(p) : 1));
                     if (brief && p > 20) {
                         System.out.print("  ...\n");
                         return (true);
@@ -78,7 +77,7 @@ public class DZcs_print {
         } else {
             System.out.print(String.format("triplet: %d-by-%d, nzmax: %d nnz: %d\n", m, n, nzmax, nz));
             for (p = 0; p < nz; p++) {
-                System.out.print(String.format("    %d %d : %g\n", Ai[p], Ap[p], Ax != null ? Ax[p] : 1));
+                System.out.print(String.format("    %d %d : %g\n", Ai[p], Ap[p], Ax.x != null ? Ax.get(p) : 1));
                 if (brief && p > 20) {
                     System.out.print("  ...\n");
                     return (true);

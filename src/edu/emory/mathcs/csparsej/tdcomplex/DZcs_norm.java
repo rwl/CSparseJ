@@ -24,9 +24,9 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
-import org.apache.commons.math.complex.Complex;
-
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
 
 /**
  * Sparse matrix 1-norm.
@@ -47,16 +47,16 @@ public class DZcs_norm {
      */
     public static double cs_norm(DZcs A) {
         int p, j, n, Ap[];
-        Complex Ax[];
+        DZcsa Ax = new DZcsa();
         double norm = 0, s;
         if (!DZcs_util.CS_CSC(A) || A.x == null)
             return (-1); /* check inputs */
         n = A.n;
         Ap = A.p;
-        Ax = A.x;
+        Ax.x = A.x;
         for (j = 0; j < n; j++) {
             for (s = 0, p = Ap[j]; p < Ap[j + 1]; p++)
-                s += Ax[p].abs();
+                s += DZcs_complex.cs_cabs(Ax.get(p));
             norm = Math.max(norm, s);
         }
         return (norm);

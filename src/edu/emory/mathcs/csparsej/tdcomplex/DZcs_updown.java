@@ -24,9 +24,9 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
-import org.apache.commons.math.complex.Complex;
-
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
 
 /**
  * Sparse rank-1 Cholesky update/downate.
@@ -53,49 +53,51 @@ public class DZcs_updown {
      */
     public static boolean cs_updown(DZcs L, int sigma, DZcs C, int[] parent) {
         int n, p, f, j, Lp[], Li[], Cp[], Ci[];
-        Complex Lx[], Cx[], alpha, gamma, w1, w2, w[], phase;
+        DZcsa Lx = new DZcsa(), Cx = new DZcsa(), w;
+        double[] alpha, gamma, w1, w2, phase;
         double beta = 1, delta, beta2 = 1;
         if (!DZcs_util.CS_CSC(L) || !DZcs_util.CS_CSC(C) || parent == null)
             return (false); /* check inputs */
         Lp = L.p;
         Li = L.i;
-        Lx = L.x;
+        Lx.x = L.x;
         n = L.n;
         Cp = C.p;
         Ci = C.i;
-        Cx = C.x;
+        Cx.x = C.x;
         if ((p = Cp[0]) >= Cp[1])
             return (true); /* return if C empty */
-        w = new Complex[n]; /* get workspace */
+        w = new DZcsa(n); /* get workspace */
         f = Ci[p];
         for (; p < Cp[1]; p++)
             f = Math.min(f, Ci[p]); /* f = min (find (C)) */
         for (j = f; j != -1; j = parent[j])
-            w[j] = Complex.ZERO; /* clear workspace w */
+            w.set(j, DZcs_complex.cs_czero()); /* clear workspace w */
         for (p = Cp[0]; p < Cp[1]; p++)
-            w[Ci[p]] = Cx[p]; /* w = C */
+            w.set(Ci[p], Cx.get(p)); /* w = C */
         for (j = f; j != -1; j = parent[j]) /* walk path f up to root */
         {
             p = Lp[j];
-            alpha = w[j].divide(Lx[p]); /* alpha = w(j) / L(j,j) */
+            alpha = DZcs_complex.cs_cdiv(w.get(j), Lx.get(p)); /* alpha = w(j) / L(j,j) */
             /* CXSparseJ */
-            beta2 = beta*beta + sigma * alpha.multiply(alpha.conjugate()).getReal();
+            beta2 = beta*beta + sigma * DZcs_complex.cs_creal(DZcs_complex.cs_cmult(alpha, DZcs_complex.cs_conj(alpha)));
             if (beta2 <= 0)
                 break; /* not positive definite */
             beta2 = Math.sqrt(beta2);
             delta = (sigma > 0) ? (beta / beta2) : (beta2 / beta);
-            gamma = alpha.multiply(sigma).divide(new Complex(beta2 * beta, 0.0));
-            Lx[p] = Lx[p].multiply(delta).add(((sigma > 0) ? (gamma.multiply(w[j])) : Complex.ZERO));
+            gamma = DZcs_complex.cs_cmult(alpha, DZcs_complex.cs_cdiv(sigma, new double[] {beta2 * beta, 0.0})));
+            Lx.set(p, DZcs_complex.cs_cmult(Lx.get(p), DZcs_complex.cs_cplus(delta, ((sigma > 0) ? (DZcs_complex.cs_cmult(gamma, w.get(j))) : DZcs_complex.cs_czero()));
             beta = beta2;
             /* CXSparseJ */
-            phase = new Complex(Lx[p].divide(Lx[p]).abs(), 0.0); /* phase = abs(L(j,j))/L(j,j) */
-            Lx[p] = Lx[p].multiply(phase); /* L(j,j) = L(j,j) * phase */
+            phase = new double[] {DZcs_complex.cs_cdiv(Lx.get(p), DZcs_complex.cs_cabs(Lx.get(p)), 0.0}; /* phase = abs(L(j,j))/L(j,j) */
+            Lx.set(p, DZcs_complex.cs_cmult(Lx.get(p), phase)); /* L(j,j) = L(j,j) * phase */
             for (p++; p < Lp[j + 1]; p++) {
-                w1 = w[Li[p]];
-                w[Li[p]] = w2 = w1.subtract(alpha.multiply(Lx[p]));
-                Lx[p] = Lx[p].multiply(delta).add(gamma.multiply(((sigma > 0) ? w1 : w2)));
+                w1 = w.get(Li[p]);
+                w.set(Li[p], DZcs_complex.cs_cminus(w1, DZcs_complex.cs_cmult(alpha, Lx.get(p))));
+                w2 = w.get(Li[p]);
+                Lx.set(p, DZcs_complex.cs_cmult(Lx.get(p), DZcs_complex.cs_cplus(delta, DZcs_complex.cs_cmult(gamma, ((sigma > 0) ? w1 : w2)))));
                 /* CXSparseJ */
-                Lx[p] = Lx[p].multiply(phase); /* L(i,j) = L(i,j) * phase */
+                Lx.set(p, DZcs_complex.cs_cmult(Lx.get(p), phase)); /* L(i,j) = L(i,j) * phase */
             }
         }
         return (beta2 > 0);

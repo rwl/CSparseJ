@@ -51,7 +51,7 @@ public class DZcs_add {
     public static DZcs cs_add(DZcs A, DZcs B, double[] alpha, double[] beta) {
         int p, j, nz = 0, anz;
         int Cp[], Ci[], Bp[], m, n, bnz, w[];
-        DZcsa x, Bx, Cx;
+        DZcsa x, Bx = new DZcsa(), Cx = new DZcsa();
         boolean values;
         DZcs C;
         if (!DZcs_util.CS_CSC(A) || !DZcs_util.CS_CSC(B))

@@ -24,9 +24,9 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
-import org.apache.commons.math.complex.Complex;
-
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
 
 /**
  * Sparse matrix multiply.
@@ -48,7 +48,7 @@ public class DZcs_multiply {
      */
     public static DZcs cs_multiply(DZcs A, DZcs B) {
         int p, j, nz = 0, anz, Cp[], Ci[], Bp[], m, n, bnz, w[], Bi[];
-        Complex x[], Bx[], Cx[];
+        DZcsa x, Bx = new DZcsa(), Cx = new DZcsa();
         boolean values;
         DZcs C;
         if (!DZcs_util.CS_CSC(A) || !DZcs_util.CS_CSC(B))
@@ -60,11 +60,11 @@ public class DZcs_multiply {
         n = B.n;
         Bp = B.p;
         Bi = B.i;
-        Bx = B.x;
+        Bx.x = B.x;
         bnz = Bp[n];
         w = new int[m]; /* get workspace */
-        values = (A.x != null) && (Bx != null);
-        x = values ? new Complex[m] : null; /* get workspace */
+        values = (A.x != null) && (Bx.x != null);
+        x = values ? new DZcsa(m) : null; /* get workspace */
         C = DZcs_util.cs_spalloc(m, n, anz + bnz, values, false); /* allocate result */
         Cp = C.p;
         for (j = 0; j < n; j++) {
@@ -72,14 +72,14 @@ public class DZcs_multiply {
                 DZcs_util.cs_sprealloc(C, 2 * (C.nzmax) + m);
             }
             Ci = C.i;
-            Cx = C.x; /* C.i and C.x may be reallocated */
+            Cx.x = C.x; /* C.i and C.x may be reallocated */
             Cp[j] = nz; /* column j of C starts here */
             for (p = Bp[j]; p < Bp[j + 1]; p++) {
-                nz = DZcs_scatter.cs_scatter(A, Bi[p], (Bx != null) ? Bx[p] : Complex.ONE, w, x, j + 1, C, nz);
+                nz = DZcs_scatter.cs_scatter(A, Bi[p], (Bx.x != null) ? Bx.get(p) : DZcs_complex.cs_cone(), w, x, j + 1, C, nz);
             }
             if (values)
                 for (p = Cp[j]; p < nz; p++)
-                    Cx[p] = x[Ci[p]];
+                    Cx.set(p, x.get(Ci[p]));
         }
         Cp[n] = nz; /* finalize the last column of C */
         DZcs_util.cs_sprealloc(C, 0); /* remove extra space from C */

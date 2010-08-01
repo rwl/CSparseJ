@@ -29,8 +29,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import org.apache.commons.math.complex.Complex;
-
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
 
 /**
@@ -54,7 +52,7 @@ public class DZcs_load {
      */
     public static DZcs cs_load(String fileName) {
         int i, j;
-        Complex x;
+        double[] x;
         DZcs T;
         BufferedReader in;
         try {
@@ -74,7 +72,7 @@ public class DZcs_load {
                 j = Integer.parseInt(tokens[1]);
                 double x_re = Double.parseDouble(tokens[2]);
                 double x_im = Double.parseDouble(tokens[3]);
-                x = new Complex(x_re, x_im);
+                x = new double[] {x_re, x_im};
                 if (!DZcs_entry.cs_entry(T, i, j, x))
                     return (null);
             }

@@ -26,7 +26,6 @@ package edu.emory.mathcs.csparsej.tdcomplex;
 
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsd;
-import org.apache.commons.math.complex.Complex;
 
 /**
  * Various utilities.
@@ -60,7 +59,7 @@ public class DZcs_util {
         A.nz = triplet ? 0 : -1; /* allocate triplet or comp.col */
         A.p = triplet ? new int[nzmax] : new int[n + 1];
         A.i = new int[nzmax];
-        A.x = values ? new Complex[nzmax] : null;
+        A.x = values ? new double[2 * nzmax] : null;
         return A;
     }
 
@@ -89,7 +88,7 @@ public class DZcs_util {
             A.p = Apnew;
         }
         if (A.x != null) {
-            Complex[] Axnew = new Complex[nzmax];
+            double[] Axnew = new double[2 * nzmax];
             length = Math.min(nzmax, A.x.length);
             System.arraycopy(A.x, 0, Axnew, 0, length);
             A.x = Axnew;

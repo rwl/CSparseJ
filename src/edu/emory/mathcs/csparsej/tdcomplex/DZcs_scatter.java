@@ -24,8 +24,9 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
-import org.apache.commons.math.complex.Complex;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
 
 /**
  * Scatter a sparse vector.
@@ -58,15 +59,15 @@ public class DZcs_scatter {
      *            pattern of x placed in C starting at C.i[nz]
      * @return new value of nz, -1 on error
      */
-    public static int cs_scatter(DZcs A, int j, Complex beta, int[] w, Complex[] x, int mark, DZcs C, int nz) {
+    public static int cs_scatter(DZcs A, int j, double[] beta, int[] w, DZcsa x, int mark, DZcs C, int nz) {
         int i, p;
         int Ap[], Ai[], Ci[];
-        Complex[] Ax;
+        DZcsa Ax = new DZcsa();
         if (!DZcs_util.CS_CSC(A) || w == null || !DZcs_util.CS_CSC(C))
             return (-1); /* check inputs */
         Ap = A.p;
         Ai = A.i;
-        Ax = A.x;
+        Ax.x = A.x;
         Ci = C.i;
         for (p = Ap[j]; p < Ap[j + 1]; p++) {
             i = Ai[p]; /* A(i,j) is nonzero */
@@ -74,9 +75,9 @@ public class DZcs_scatter {
                 w[i] = mark; /* i is new entry in column j */
                 Ci[nz++] = i; /* add i to pattern of C(:,j) */
                 if (x != null)
-                    x[i] = beta.multiply(Ax[p]); /* x(i) = beta*A(i,j) */
+                    x.set(i, DZcs_complex.cs_cmult(beta, Ax.get(p))); /* x(i) = beta*A(i,j) */
             } else if (x != null)
-                x[i] = x[i].add(beta.multiply(Ax[p])); /* i exists in C(:,j) already */
+                x.set(i, DZcs_complex.cs_cplus(x.get(i), DZcs_complex.cs_cmult(beta, Ax.get(p)))); /* i exists in C(:,j) already */
         }
         return nz;
     }

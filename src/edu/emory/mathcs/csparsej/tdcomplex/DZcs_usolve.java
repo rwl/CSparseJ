@@ -24,9 +24,9 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
-import org.apache.commons.math.complex.Complex;
-
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
 
 /**
  * Solve an upper triangular system Ux=b.
@@ -46,19 +46,19 @@ public class DZcs_usolve {
      *            size n, right hand side on input, solution on output
      * @return true if successful, false on error
      */
-    public static boolean cs_usolve(DZcs U, Complex[] x) {
+    public static boolean cs_usolve(DZcs U, DZcsa x) {
         int p, j, n, Up[], Ui[];
-        Complex Ux[];
+        DZcsa Ux = new DZcsa();
         if (!DZcs_util.CS_CSC(U) || x == null)
             return (false); /* check inputs */
         n = U.n;
         Up = U.p;
         Ui = U.i;
-        Ux = U.x;
+        Ux.x = U.x;
         for (j = n - 1; j >= 0; j--) {
-            x[j] = x[j].divide(Ux[Up[j + 1] - 1]);
+            x.set(j, DZcs_complex.cs_cdiv(x.get(j), Ux.get(Up[j + 1] - 1)));
             for (p = Up[j]; p < Up[j + 1] - 1; p++) {
-                x[Ui[p]] = x[Ui[p]].subtract(Ux[p].multiply(x[j]));
+                x.set(Ui[p], DZcs_complex.cs_cminus(x.get(Ui[p]), DZcs_complex.cs_cmult(Ux.get(p), x.get(j))));
             }
         }
         return (true);

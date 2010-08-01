@@ -24,7 +24,7 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
-import org.apache.commons.math.complex.Complex;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 
 /**
  * Permute a vector, x = P'b.
@@ -47,12 +47,12 @@ public class DZcs_ipvec {
      *            length of p, b, and x
      * @return true if successful, false on error
      */
-    public static boolean cs_ipvec(int[] p, Complex[] b, Complex[] x, int n) {
+    public static boolean cs_ipvec(int[] p, DZcsa b, DZcsa x, int n) {
         int k;
         if (x == null || b == null)
             return (false); /* check inputs */
         for (k = 0; k < n; k++)
-            x[p != null ? p[k] : k] = b[k];
+            x.set(p != null ? p[k] : k, b.get(k));
         return (true);
     }
 }

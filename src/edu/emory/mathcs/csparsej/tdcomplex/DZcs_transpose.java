@@ -24,8 +24,7 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
-import org.apache.commons.math.complex.Complex;
-
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
 
 /**
@@ -48,7 +47,7 @@ public class DZcs_transpose {
      */
     public static DZcs cs_transpose(DZcs A, boolean values) {
         int p, q, j, Cp[], Ci[], n, m, Ap[], Ai[], w[];
-        Complex Cx[], Ax[];
+        DZcsa Cx = new DZcsa(), Ax = new DZcsa();
         DZcs C;
         if (!DZcs_util.CS_CSC(A))
             return (null); /* check inputs */
@@ -56,20 +55,20 @@ public class DZcs_transpose {
         n = A.n;
         Ap = A.p;
         Ai = A.i;
-        Ax = A.x;
-        C = DZcs_util.cs_spalloc(n, m, Ap[n], values && (Ax != null), false); /* allocate result */
+        Ax.x = A.x;
+        C = DZcs_util.cs_spalloc(n, m, Ap[n], values && (Ax.x != null), false); /* allocate result */
         w = new int[m]; /* get workspace */
         Cp = C.p;
         Ci = C.i;
-        Cx = C.x;
+        Cx.x = C.x;
         for (p = 0; p < Ap[n]; p++)
             w[Ai[p]]++; /* row counts */
         DZcs_cumsum.cs_cumsum(Cp, w, m); /* row pointers */
         for (j = 0; j < n; j++) {
             for (p = Ap[j]; p < Ap[j + 1]; p++) {
                 Ci[q = w[Ai[p]]++] = j; /* place A(i,j) as entry C(j,i) */
-                if (Cx != null)
-                    Cx[q] = Ax[p];
+                if (Cx.x != null)
+                    Cx.set(q, Ax.get(p));
             }
         }
         return C;

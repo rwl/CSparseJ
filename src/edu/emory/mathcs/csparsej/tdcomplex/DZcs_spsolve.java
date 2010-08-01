@@ -24,9 +24,9 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
-import org.apache.commons.math.complex.Complex;
-
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
 
 /**
  * Sparse lower or upper triangular solve. x=G\b where G, x, and b are sparse,
@@ -57,33 +57,33 @@ public class DZcs_spsolve {
      *            true if lower triangular, false if upper
      * @return top, -1 in error
      */
-    public static int cs_spsolve(DZcs G, DZcs B, int k, int[] xi, Complex[] x, int[] pinv, boolean lo) {
+    public static int cs_spsolve(DZcs G, DZcs B, int k, int[] xi, DZcsa x, int[] pinv, boolean lo) {
         int j, J, p, q, px, top, n, Gp[], Gi[], Bp[], Bi[];
-        Complex Gx[], Bx[];
+        DZcsa Gx = new DZcsa(), Bx = new DZcsa();
         if (!DZcs_util.CS_CSC(G) || !DZcs_util.CS_CSC(B) || xi == null || x == null)
             return (-1);
         Gp = G.p;
         Gi = G.i;
-        Gx = G.x;
+        Gx.x = G.x;
         n = G.n;
         Bp = B.p;
         Bi = B.i;
-        Bx = B.x;
+        Bx.x = B.x;
         top = DZcs_reach.cs_reach(G, B, k, xi, pinv); /* xi[top..n-1]=Reach(B(:,k)) */
         for (p = top; p < n; p++)
-            x[xi[p]] = Complex.ZERO; /* clear x */
+            x.set(xi[p], DZcs_complex.cs_czero()); /* clear x */
         for (p = Bp[k]; p < Bp[k + 1]; p++)
-            x[Bi[p]] = Bx[p]; /* scatter B */
+            x.set(Bi[p], Bx.get(p)); /* scatter B */
         for (px = top; px < n; px++) {
             j = xi[px]; /* x(j) is nonzero */
             J = pinv != null ? (pinv[j]) : j; /* j maps to col J of G */
             if (J < 0)
                 continue; /* column J is empty */
-            x[j] = x[j].divide(Gx[lo ? (Gp[J]) : (Gp[J + 1] - 1)]);/* x(j) /= G(j,j) */
+            x.set(j, DZcs_complex.cs_cdiv(x.get(j), Gx.get(lo ? (Gp[J]) : (Gp[J + 1] - 1))));/* x(j) /= G(j,j) */
             p = lo ? (Gp[J] + 1) : (Gp[J]); /* lo: L(j,j) 1st entry */
             q = lo ? (Gp[J + 1]) : (Gp[J + 1] - 1); /* up: U(j,j) last entry */
             for (; p < q; p++) {
-                x[Gi[p]] = x[Gi[p]].subtract(Gx[p].multiply(x[j])); /* x(i) -= G(i,j) * x(j) */
+                x.set(Gi[p], DZcs_complex.cs_cminus(x.get(Gi[p]), DZcs_complex.cs_cmult(Gx.get(p), x.get(j)))); /* x(i) -= G(i,j) * x(j) */
             }
         }
         return (top); /* return top of stack */

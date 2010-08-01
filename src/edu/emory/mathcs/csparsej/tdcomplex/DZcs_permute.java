@@ -24,8 +24,7 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
-import org.apache.commons.math.complex.Complex;
-
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
 
 /**
@@ -51,7 +50,7 @@ public class DZcs_permute {
      */
     public static DZcs cs_permute(DZcs A, int[] pinv, int[] q, boolean values) {
         int t, j, k, nz = 0, m, n, Ap[], Ai[], Cp[], Ci[];
-        Complex Cx[], Ax[];
+        DZcsa Cx = new DZcsa(), Ax = new DZcsa();
         DZcs C;
         if (!DZcs_util.CS_CSC(A))
             return (null); /* check inputs */
@@ -59,17 +58,17 @@ public class DZcs_permute {
         n = A.n;
         Ap = A.p;
         Ai = A.i;
-        Ax = A.x;
-        C = DZcs_util.cs_spalloc(m, n, Ap[n], values && Ax != null, false); /* alloc result */
+        Ax.x = A.x;
+        C = DZcs_util.cs_spalloc(m, n, Ap[n], values && Ax.x != null, false); /* alloc result */
         Cp = C.p;
         Ci = C.i;
-        Cx = C.x;
+        Cx.x = C.x;
         for (k = 0; k < n; k++) {
             Cp[k] = nz; /* column k of C is column q[k] of A */
             j = q != null ? (q[k]) : k;
             for (t = Ap[j]; t < Ap[j + 1]; t++) {
-                if (Cx != null)
-                    Cx[nz] = Ax[t]; /* row i of A is row pinv[i] of C */
+                if (Cx.x != null)
+                    Cx.set(nz, Ax.get(t)); /* row i of A is row pinv[i] of C */
                 Ci[nz++] = pinv != null ? (pinv[Ai[t]]) : Ai[t];
             }
         }

@@ -24,11 +24,11 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
-import org.apache.commons.math.complex.Complex;
-
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsn;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcss;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
 
 /**
  * Sparse LU factorization.
@@ -53,7 +53,8 @@ public class DZcs_lu {
     public static DZcsn cs_lu(DZcs A, DZcss S, double tol) {
         DZcs L, U;
         DZcsn N;
-        Complex pivot, Lx[], Ux[], x[];
+        double[] pivot;
+        DZcsa Lx = new DZcsa(), Ux = new DZcsa(), x;
         double a, t;
         int Lp[], Li[], Up[], Ui[], pinv[], xi[], q[], n, ipiv, k, top, p, i, col, lnz, unz;
         if (!DZcs_util.CS_CSC(A) || S == null)
@@ -62,7 +63,7 @@ public class DZcs_lu {
         q = S.q;
         lnz = S.lnz;
         unz = S.unz;
-        x = new Complex[n]; /* get double workspace */
+        x = new DZcsa(n); /* get double workspace */
         xi = new int[2 * n]; /* get int workspace */
         N = new DZcsn(); /* allocate result */
         N.L = L = DZcs_util.cs_spalloc(n, n, lnz, true, false); /* allocate result L */
@@ -71,7 +72,7 @@ public class DZcs_lu {
         Lp = L.p;
         Up = U.p;
         for (i = 0; i < n; i++)
-            x[i] = Complex.ZERO; /* clear workspace */
+            x.set(i, DZcs_complex.cs_czero()); /* clear workspace */
         for (i = 0; i < n; i++)
             pinv[i] = -1; /* no rows pivotal yet */
         for (k = 0; k <= n; k++)
@@ -89,9 +90,9 @@ public class DZcs_lu {
                 DZcs_util.cs_sprealloc(U, 2 * U.nzmax + n);
             }
             Li = L.i;
-            Lx = L.x;
+            Lx.x = L.x;
             Ui = U.i;
-            Ux = U.x;
+            Ux.x = U.x;
             col = q != null ? (q[k]) : k;
             top = DZcs_spsolve.cs_spsolve(L, A, col, xi, x, pinv, true); /* x = L\A(:,col) */
             /* --- Find pivot --------------------------------------------------- */
@@ -101,36 +102,36 @@ public class DZcs_lu {
                 i = xi[p]; /* x(i) is nonzero */
                 if (pinv[i] < 0) /* row i is not yet pivotal */
                 {
-                    if ((t = x[i].abs()) > a) {
+                    if ((t = DZcs_complex.cs_cabs(x.get(i))) > a) {
                         a = t; /* largest pivot candidate so far */
                         ipiv = i;
                     }
                 } else /* x(i) is the entry U(pinv[i],k) */
                 {
                     Ui[unz] = pinv[i];
-                    Ux[unz++] = x[i];
+                    Ux.set(unz++, x.get(i));
                 }
             }
             if (ipiv == -1 || a <= 0)
                 return (null);
-            if (pinv[col] < 0 && x[col].abs() >= a * tol)
+            if (pinv[col] < 0 && DZcs_complex.cs_cabs(x.get(col)) >= a * tol)
                 ipiv = col;
             /* --- Divide by pivot ---------------------------------------------- */
-            pivot = x[ipiv]; /* the chosen pivot */
+            pivot = x.get(ipiv); /* the chosen pivot */
             Ui[unz] = k; /* last entry in U(:,k) is U(k,k) */
-            Ux[unz++] = pivot;
+            Ux.set(unz++, pivot);
             pinv[ipiv] = k; /* ipiv is the kth pivot row */
             Li[lnz] = ipiv; /* first entry in L(:,k) is L(k,k) = 1 */
-            Lx[lnz++] = Complex.ONE;
+            Lx.set(lnz++, DZcs_complex.cs_cone());
             for (p = top; p < n; p++) /* L(k+1:n,k) = x / pivot */
             {
                 i = xi[p];
                 if (pinv[i] < 0) /* x(i) is an entry in L(:,k) */
                 {
                     Li[lnz] = i; /* save unpermuted row in L */
-                    Lx[lnz++] = x[i].divide(pivot); /* scale pivot column */
+                    Lx.set(lnz++, DZcs_complex.cs_cdiv(x.get(i), pivot)); /* scale pivot column */
                 }
-                x[i] = Complex.ZERO; /* x [0..n-1] = 0 for next k */
+                x.set(i, DZcs_complex.cs_czero()); /* x [0..n-1] = 0 for next k */
             }
         }
         /* --- Finalize L and U ------------------------------------------------- */

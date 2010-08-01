@@ -24,8 +24,7 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
-import org.apache.commons.math.complex.Complex;
-
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsn;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcss;
@@ -51,8 +50,8 @@ public class DZcs_qrsol {
      *            size max(m,n), b (size m) on input, x(size n) on output
      * @return true if successful, false on error
      */
-    public static boolean cs_qrsol(int order, DZcs A, Complex[] b) {
-        Complex x[];
+    public static boolean cs_qrsol(int order, DZcs A, DZcsa b) {
+        DZcsa x;
         DZcss S;
         DZcsn N;
         DZcs AT = null;
@@ -65,7 +64,7 @@ public class DZcs_qrsol {
         if (m >= n) {
             S = DZcs_sqr.cs_sqr(order, A, true); /* ordering and symbolic analysis */
             N = DZcs_qr.cs_qr(A, S); /* numeric QR factorization */
-            x = new Complex[S != null ? S.m2 : 1]; /* get workspace */
+            x = new DZcsa(S != null ? S.m2 : 1); /* get workspace */
             ok = (S != null && N != null);
             if (ok) {
                 DZcs_ipvec.cs_ipvec(S.pinv, b, x, m); /* x(0:m-1) = b(p(0:m-1) */
@@ -80,7 +79,7 @@ public class DZcs_qrsol {
             AT = DZcs_transpose.cs_transpose(A, true); /* Ax=b is underdetermined */
             S = DZcs_sqr.cs_sqr(order, AT, true); /* ordering and symbolic analysis */
             N = DZcs_qr.cs_qr(AT, S); /* numeric QR factorization of A' */
-            x = new Complex[S != null ? S.m2 : 1]; /* get workspace */
+            x = new DZcsa(S != null ? S.m2 : 1); /* get workspace */
             ok = (AT != null && S != null && N != null);
             if (ok) {
                 DZcs_pvec.cs_pvec(S.q, b, x, m); /* x(q(0:m-1)) = b(0:m-1) */

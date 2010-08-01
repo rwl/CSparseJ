@@ -24,9 +24,9 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
-import org.apache.commons.math.complex.Complex;
-
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
 
 /**
  * Solve an upper triangular system L'x=b.
@@ -46,20 +46,20 @@ public class DZcs_ltsolve {
      *            size n, right hand side on input, solution on output
      * @return true if successful, false on error
      */
-    public static boolean cs_ltsolve(DZcs L, Complex[] x) {
+    public static boolean cs_ltsolve(DZcs L, DZcsa x) {
         int p, j, n, Lp[], Li[];
-        Complex Lx[];
+        DZcsa Lx = new DZcsa();
         if (!DZcs_util.CS_CSC(L) || x == null)
             return (false); /* check inputs */
         n = L.n;
         Lp = L.p;
         Li = L.i;
-        Lx = L.x;
+        Lx.x = L.x;
         for (j = n - 1; j >= 0; j--) {
             for (p = Lp[j] + 1; p < Lp[j + 1]; p++) {
-                x[j] = x[j].subtract(Lx[p].multiply(x[Li[p]]));
+                x.set(j, DZcs_complex.cs_cminus(x.get(j), DZcs_complex.cs_cmult(Lx.get(p), x.get(Li[p]))));
             }
-            x[j] = x[j].divide(Lx[Lp[j]]);
+            x.set(j, DZcs_complex.cs_cdiv(x.get(j), Lx.get(Lp[j])));
         }
         return (true);
     }

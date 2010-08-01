@@ -24,8 +24,7 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
-import org.apache.commons.math.complex.Complex;
-
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsn;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcss;
@@ -53,8 +52,8 @@ public class DZcs_lusol {
      *            partial pivoting tolerance
      * @return true if successful, false on error
      */
-    public static boolean cs_lusol(int order, DZcs A, Complex[] b, double tol) {
-        Complex[] x;
+    public static boolean cs_lusol(int order, DZcs A, DZcsa b, double tol) {
+        DZcsa x;
         DZcss S;
         DZcsn N;
         int n;
@@ -64,7 +63,7 @@ public class DZcs_lusol {
         n = A.n;
         S = DZcs_sqr.cs_sqr(order, A, false); /* ordering and symbolic analysis */
         N = DZcs_lu.cs_lu(A, S, tol); /* numeric LU factorization */
-        x = new Complex[n]; /* get workspace */
+        x = new DZcsa(n); /* get workspace */
         ok = (S != null && N != null);
         if (ok) {
             DZcs_ipvec.cs_ipvec(N.pinv, b, x, n); /* x = b(p) */

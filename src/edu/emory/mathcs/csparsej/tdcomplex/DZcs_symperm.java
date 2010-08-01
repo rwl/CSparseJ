@@ -24,8 +24,7 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
-import org.apache.commons.math.complex.Complex;
-
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
 
 /**
@@ -50,19 +49,19 @@ public class DZcs_symperm {
      */
     public static DZcs cs_symperm(DZcs A, int[] pinv, boolean values) {
         int i, j, p, q, i2, j2, n, Ap[], Ai[], Cp[], Ci[], w[];
-        Complex Cx[], Ax[];
+        DZcsa Cx = new DZcsa(), Ax = new DZcsa();
         DZcs C;
         if (!DZcs_util.CS_CSC(A))
             return (null); /* check inputs */
         n = A.n;
         Ap = A.p;
         Ai = A.i;
-        Ax = A.x;
-        C = DZcs_util.cs_spalloc(n, n, Ap[n], values && (Ax != null), false); /* alloc result*/
+        Ax.x = A.x;
+        C = DZcs_util.cs_spalloc(n, n, Ap[n], values && (Ax.x != null), false); /* alloc result*/
         w = new int[n]; /* get workspace */
         Cp = C.p;
         Ci = C.i;
-        Cx = C.x;
+        Cx.x = C.x;
         for (j = 0; j < n; j++) /* count entries in each column of C */
         {
             j2 = pinv != null ? pinv[j] : j; /* column j of A is column j2 of C */
@@ -83,8 +82,8 @@ public class DZcs_symperm {
                     continue; /* skip lower triangular part of A*/
                 i2 = pinv != null ? pinv[i] : i; /* row i of A is row i2 of C */
                 Ci[q = w[Math.max(i2, j2)]++] = Math.min(i2, j2);
-                if (Cx != null)
-                    Cx[q] = Ax[p];
+                if (Cx.x != null)
+                    Cx.set(q, Ax.get(p));
             }
         }
         return C;
