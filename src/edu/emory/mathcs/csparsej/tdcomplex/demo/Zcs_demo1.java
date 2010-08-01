@@ -26,16 +26,16 @@ package edu.emory.mathcs.csparsej.tdcomplex.demo;
 
 import org.apache.commons.math.complex.Complex;
 
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_add;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_compress;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_entry;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_load;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_multiply;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_norm;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_print;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_transpose;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_util;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_common.Zcs;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_add;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_compress;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_entry;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_load;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_multiply;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_norm;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_print;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_transpose;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_util;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
 
 /**
  * Read a matrix from a file and perform basic matrix operations.
@@ -46,30 +46,30 @@ import edu.emory.mathcs.csparsej.tdcomplex.Zcs_common.Zcs;
  */
 public class Zcs_demo1 {
     public static void main(String[] args) {
-        Zcs T = null, A, Eye, AT, C, D;
+        DZcs T = null, A, Eye, AT, C, D;
         int i, m;
         if (args.length == 0) {
             throw new IllegalArgumentException("Usage: java edu.emory.mathcs.csparsej.tdcomplex.demo.Zcs_demo1 fileName");
         }
-        T = Zcs_load.cs_load(args[0]); /* load triplet matrix T from file */
+        T = DZcs_load.cs_load(args[0]); /* load triplet matrix T from file */
         System.out.print("T:\n");
-        Zcs_print.cs_print(T, false); /* print T */
-        A = Zcs_compress.cs_compress(T); /* A = compressed-column form of T */
+        DZcs_print.cs_print(T, false); /* print T */
+        A = DZcs_compress.cs_compress(T); /* A = compressed-column form of T */
         System.out.print("A:\n");
-        Zcs_print.cs_print(A, false); /* print A */
+        DZcs_print.cs_print(A, false); /* print A */
         T = null; /* clear T */
-        AT = Zcs_transpose.cs_transpose(A, true); /* AT = A' */
+        AT = DZcs_transpose.cs_transpose(A, true); /* AT = A' */
         System.out.print("AT:\n");
-        Zcs_print.cs_print(AT, false); /* print AT */
+        DZcs_print.cs_print(AT, false); /* print AT */
         m = A != null ? A.m : 0; /* m = # of rows of A */
-        T = Zcs_util.cs_spalloc(m, m, m, true, true); /* create triplet identity matrix */
+        T = DZcs_util.cs_spalloc(m, m, m, true, true); /* create triplet identity matrix */
         for (i = 0; i < m; i++)
-            Zcs_entry.cs_entry(T, i, i, Complex.ONE);
-        Eye = Zcs_compress.cs_compress(T); /* Eye = speye (m) */
+            DZcs_entry.cs_entry(T, i, i, Complex.ONE);
+        Eye = DZcs_compress.cs_compress(T); /* Eye = speye (m) */
         T = null;
-        C = Zcs_multiply.cs_multiply(A, AT); /* C = A*A' */
-        D = Zcs_add.cs_add(C, Eye, Complex.ONE, new Complex(Zcs_norm.cs_norm(C), 0.0)); /* D = C + Eye*norm (C,1) */
+        C = DZcs_multiply.cs_multiply(A, AT); /* C = A*A' */
+        D = DZcs_add.cs_add(C, Eye, Complex.ONE, new Complex(DZcs_norm.cs_norm(C), 0.0)); /* D = C + Eye*norm (C,1) */
         System.out.print("D:\n");
-        Zcs_print.cs_print(D, false); /* print D */
+        DZcs_print.cs_print(D, false); /* print D */
     }
 }

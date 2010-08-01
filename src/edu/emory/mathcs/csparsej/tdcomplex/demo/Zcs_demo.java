@@ -28,36 +28,36 @@ import java.util.Random;
 
 import org.apache.commons.math.complex.Complex;
 
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_add;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_chol;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_cholsol;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_compress;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_dmperm;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_droptol;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_dropzeros;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_dupl;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_fkeep;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_gaxpy;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_ifkeep;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_ipvec;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_load;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_lsolve;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_ltsolve;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_lusol;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_multiply;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_norm;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_permute;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_pinv;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_pvec;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_qrsol;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_schol;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_transpose;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_updown;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_util;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_common.Zcs;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_common.Zcsd;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_common.Zcsn;
-import edu.emory.mathcs.csparsej.tdcomplex.Zcs_common.Zcss;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_add;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_chol;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_cholsol;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_compress;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_dmperm;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_droptol;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_dropzeros;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_dupl;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_fkeep;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_gaxpy;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_ifkeep;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_ipvec;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_load;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_lsolve;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_ltsolve;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_lusol;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_multiply;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_norm;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_permute;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_pinv;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_pvec;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_qrsol;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_schol;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_transpose;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_updown;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_util;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsd;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsn;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcss;
 
 /**
  * Support routines for Zcs_demo*.java
@@ -74,8 +74,8 @@ public class Zcs_demo {
      *
      */
     public static class Zproblem {
-        public Zcs A;
-        public Zcs C;
+        public DZcs A;
+        public DZcs C;
         public int sym;
         public Complex[] x;
         public Complex[] b;
@@ -87,7 +87,7 @@ public class Zcs_demo {
     };
 
     /* 1 if A is square & upper tri., -1 if square & lower tri., 0 otherwise */
-    private static int is_sym(Zcs A) {
+    private static int is_sym(DZcs A) {
         int j, p, n = A.n, m = A.m, Ap[] = A.p, Ai[] = A.i;
         boolean is_upper, is_lower;
         if (m != n)
@@ -106,7 +106,7 @@ public class Zcs_demo {
     }
 
     /* true for off-diagonal entries */
-    private static class Dropdiag implements Zcs_ifkeep {
+    private static class Dropdiag implements DZcs_ifkeep {
 
         @Override
         public boolean fkeep(int i, int j, Complex aij, Object other) {
@@ -116,11 +116,11 @@ public class Zcs_demo {
     }
 
     /* C = A + triu(A,1)' */
-    private static Zcs make_sym(Zcs A) {
-        Zcs AT, C;
-        AT = Zcs_transpose.cs_transpose(A, true); /* AT = A' */
-        Zcs_fkeep.cs_fkeep(AT, new Dropdiag(), null); /* drop diagonal entries from AT */
-        C = Zcs_add.cs_add(A, AT, Complex.ONE, Complex.ONE); /* C = A+AT */
+    private static DZcs make_sym(DZcs A) {
+        DZcs AT, C;
+        AT = DZcs_transpose.cs_transpose(A, true); /* AT = A' */
+        DZcs_fkeep.cs_fkeep(AT, new Dropdiag(), null); /* drop diagonal entries from AT */
+        C = DZcs_add.cs_add(A, AT, Complex.ONE, Complex.ONE); /* C = A+AT */
         return (C);
     }
 
@@ -143,7 +143,7 @@ public class Zcs_demo {
     }
 
     /* compute residual, norm(A*x-b,inf) / (norm(A,1)*norm(x,inf) + norm(b,inf)) */
-    private static void print_resid(boolean ok, Zcs A, Complex[] x, Complex[] b, Complex[] resid) {
+    private static void print_resid(boolean ok, DZcs A, Complex[] x, Complex[] b, Complex[] resid) {
         int i, m, n;
         if (!ok) {
             System.out.print("    (failed)\n");
@@ -153,9 +153,9 @@ public class Zcs_demo {
         n = A.n;
         for (i = 0; i < m; i++)
             resid[i] = b[i].multiply(-1.0); /* resid = -b */
-        Zcs_gaxpy.cs_gaxpy(A, x, resid); /* resid = resid + A*x  */
+        DZcs_gaxpy.cs_gaxpy(A, x, resid); /* resid = resid + A*x  */
         System.out.print(String.format("resid: %8.2e\n", norm(resid, m)
-                / ((n == 0) ? 1 : (Zcs_norm.cs_norm(A) * norm(x, n) + norm(b, m)))));
+                / ((n == 0) ? 1 : (DZcs_norm.cs_norm(A) * norm(x, n) + norm(b, m)))));
     }
 
     private static double tic() {
@@ -194,28 +194,28 @@ public class Zcs_demo {
      * @return problem
      */
     public static Zproblem get_problem(String fileName, double tol) {
-        Zcs T, A, C;
+        DZcs T, A, C;
         int sym, m, n, mn, nz1, nz2;
         Zproblem Prob;
         Prob = new Zproblem();
-        T = Zcs_load.cs_load(fileName); /* load triplet matrix T from a file */
-        Prob.A = A = Zcs_compress.cs_compress(T); /* A = compressed-column form of T */
+        T = DZcs_load.cs_load(fileName); /* load triplet matrix T from a file */
+        Prob.A = A = DZcs_compress.cs_compress(T); /* A = compressed-column form of T */
         T = null; /* clear T */
-        Zcs_dupl.cs_dupl(A);
+        DZcs_dupl.cs_dupl(A);
         Prob.sym = sym = is_sym(A); /* determine if A is symmetric */
         m = A.m;
         n = A.n;
         mn = Math.max(m, n);
         nz1 = A.p[n];
-        Zcs_dropzeros.cs_dropzeros(A); /* drop zero entries */
+        DZcs_dropzeros.cs_dropzeros(A); /* drop zero entries */
         nz2 = A.p[n];
         if (tol > 0)
-            Zcs_droptol.cs_droptol(A, tol); /* drop tiny entries (just to test) */
+            DZcs_droptol.cs_droptol(A, tol); /* drop tiny entries (just to test) */
         Prob.C = C = sym != 0 ? make_sym(A) : A; /* C = A + triu(A,1)', or C=A */
         if (C == null)
             return (null);
         System.out.print(String.format("\n--- Matrix: %d-by-%d, nnz: %d (sym: %d: nnz %d), norm: %8.2e\n", m, n,
-                A.p[n], sym, sym != 0 ? C.p[n] : 0, Zcs_norm.cs_norm(C)));
+                A.p[n], sym, sym != 0 ? C.p[n] : 0, DZcs_norm.cs_norm(C)));
         if (nz1 != nz2)
             System.out.print(String.format("zero entries dropped: %d\n", nz1 - nz2));
         if (nz2 != A.p[n])
@@ -235,12 +235,12 @@ public class Zcs_demo {
      * @return true if successful, false on error
      */
     public static boolean demo2(Zproblem Prob) {
-        Zcs A, C;
+        DZcs A, C;
         Complex b[], x[], resid[];
         double t, tol;
         int k, m, n, order, nb, ns, r[], s[], rr[], sprank;
         boolean ok;
-        Zcsd D;
+        DZcsd D;
         if (Prob == null)
             return (false);
         A = Prob.A;
@@ -251,7 +251,7 @@ public class Zcs_demo {
         m = A.m;
         n = A.n;
         tol = Prob.sym != 0 ? 0.001 : 1; /* partial pivoting tolerance */
-        D = Zcs_dmperm.cs_dmperm(C, 1); /* randomized dmperm analysis */
+        D = DZcs_dmperm.cs_dmperm(C, 1); /* randomized dmperm analysis */
         if (D == null)
             return (false);
         nb = D.nb;
@@ -274,7 +274,7 @@ public class Zcs_demo {
             print_order(order);
             rhs(x, b, m); /* compute right-hand side */
             t = tic();
-            ok = Zcs_qrsol.cs_qrsol(order, C, x); /* min norm(Ax-b) with QR */
+            ok = DZcs_qrsol.cs_qrsol(order, C, x); /* min norm(Ax-b) with QR */
             System.out.print(String.format("time: %8.2f ms ", toc(t)));
             print_resid(ok, C, x, b, resid); /* print residual */
         }
@@ -288,7 +288,7 @@ public class Zcs_demo {
             print_order(order);
             rhs(x, b, m); /* compute right-hand side */
             t = tic();
-            ok = Zcs_lusol.cs_lusol(order, C, x, tol); /* solve Ax=b with LU */
+            ok = DZcs_lusol.cs_lusol(order, C, x, tol); /* solve Ax=b with LU */
             System.out.print(String.format("time: %8.2f ms ", toc(t)));
             print_resid(ok, C, x, b, resid); /* print residual */
         }
@@ -302,7 +302,7 @@ public class Zcs_demo {
             print_order(order);
             rhs(x, b, m); /* compute right-hand side */
             t = tic();
-            ok = Zcs_cholsol.cs_cholsol(order, C, x); /* solve Ax=b with Cholesky */
+            ok = DZcs_cholsol.cs_cholsol(order, C, x); /* solve Ax=b with Cholesky */
             System.out.print(String.format("time: %8.2f ms ", toc(t)));
             print_resid(ok, C, x, b, resid); /* print residual */
         }
@@ -317,13 +317,13 @@ public class Zcs_demo {
      * @return true if successful, false on error
      */
     public static boolean demo3(Zproblem Prob) {
-        Zcs A, C, W = null, WW, WT, E = null, W2;
+        DZcs A, C, W = null, WW, WT, E = null, W2;
         int n, k, Li[], Lp[], Wi[], Wp[], p1, p2, p[] = null;
         boolean ok;
         Complex b[], x[], resid[], y[] = null, Lx[], Wx[], s;
         double t, t1;
-        Zcss S = null;
-        Zcsn N = null;
+        DZcss S = null;
+        DZcsn N = null;
         if (Prob == null || Prob.sym == 0 || Prob.A.n == 0)
             return (false);
         A = Prob.A;
@@ -339,23 +339,23 @@ public class Zcs_demo {
         print_order(1);
         y = new Complex[n];
         t = tic();
-        S = Zcs_schol.cs_schol(1, C); /* symbolic Chol, amd(A+A') */
+        S = DZcs_schol.cs_schol(1, C); /* symbolic Chol, amd(A+A') */
         System.out.print(String.format("\nsymbolic chol time %8.2f ms\n", toc(t)));
         t = tic();
-        N = Zcs_chol.cs_chol(C, S); /* numeric Cholesky */
+        N = DZcs_chol.cs_chol(C, S); /* numeric Cholesky */
         System.out.print(String.format("numeric  chol time %8.2f ms\n", toc(t)));
         if (S == null || N == null)
             return (false);
         t = tic();
-        Zcs_ipvec.cs_ipvec(S.pinv, b, y, n); /* y = P*b */
-        Zcs_lsolve.cs_lsolve(N.L, y); /* y = L\y */
-        Zcs_ltsolve.cs_ltsolve(N.L, y); /* y = L'\y */
-        Zcs_pvec.cs_pvec(S.pinv, y, x, n); /* x = P'*y */
+        DZcs_ipvec.cs_ipvec(S.pinv, b, y, n); /* y = P*b */
+        DZcs_lsolve.cs_lsolve(N.L, y); /* y = L\y */
+        DZcs_ltsolve.cs_ltsolve(N.L, y); /* y = L'\y */
+        DZcs_pvec.cs_pvec(S.pinv, y, x, n); /* x = P'*y */
         System.out.print(String.format("solve    chol time %8.2f ms\n", toc(t)));
         System.out.println("original: ");
         print_resid(true, C, x, b, resid); /* print residual */
         k = n / 2; /* construct W  */
-        W = Zcs_util.cs_spalloc(n, 1, n, true, false);
+        W = DZcs_util.cs_spalloc(n, 1, n, true, false);
         Lp = N.L.p;
         Li = N.L.i;
         Lx = N.L.x;
@@ -373,24 +373,24 @@ public class Zcs_demo {
             Wx[p2] = s.multiply(r.nextDouble());
         }
         t = tic();
-        ok = Zcs_updown.cs_updown(N.L, +1, W, S.parent); /* update: L*L'+W*W' */
+        ok = DZcs_updown.cs_updown(N.L, +1, W, S.parent); /* update: L*L'+W*W' */
         t1 = toc(t);
         System.out.print(String.format("update:   time: %8.2f ms\n", t1));
         if (!ok)
             return (false);
         t = tic();
-        Zcs_ipvec.cs_ipvec(S.pinv, b, y, n); /* y = P*b */
-        Zcs_lsolve.cs_lsolve(N.L, y); /* y = L\y */
-        Zcs_ltsolve.cs_ltsolve(N.L, y); /* y = L'\y */
-        Zcs_pvec.cs_pvec(S.pinv, y, x, n); /* x = P'*y */
+        DZcs_ipvec.cs_ipvec(S.pinv, b, y, n); /* y = P*b */
+        DZcs_lsolve.cs_lsolve(N.L, y); /* y = L\y */
+        DZcs_ltsolve.cs_ltsolve(N.L, y); /* y = L'\y */
+        DZcs_pvec.cs_pvec(S.pinv, y, x, n); /* x = P'*y */
         t = toc(t);
-        p = Zcs_pinv.cs_pinv(S.pinv, n);
-        W2 = Zcs_permute.cs_permute(W, p, null, true); /* E = C + (P'W)*(P'W)' */
-        WT = Zcs_transpose.cs_transpose(W2, true);
-        WW = Zcs_multiply.cs_multiply(W2, WT);
+        p = DZcs_pinv.cs_pinv(S.pinv, n);
+        W2 = DZcs_permute.cs_permute(W, p, null, true); /* E = C + (P'W)*(P'W)' */
+        WT = DZcs_transpose.cs_transpose(W2, true);
+        WW = DZcs_multiply.cs_multiply(W2, WT);
         WT = null;
         W2 = null;
-        E = Zcs_add.cs_add(C, WW, Complex.ONE, Complex.ONE);
+        E = DZcs_add.cs_add(C, WW, Complex.ONE, Complex.ONE);
         WW = null;
         if (E == null || p == null)
             return (false);
@@ -398,27 +398,27 @@ public class Zcs_demo {
         print_resid(true, E, x, b, resid); /* print residual */
         N = null; /* clear N */
         t = tic();
-        N = Zcs_chol.cs_chol(E, S); /* numeric Cholesky */
+        N = DZcs_chol.cs_chol(E, S); /* numeric Cholesky */
         if (N == null)
             return (false);
-        Zcs_ipvec.cs_ipvec(S.pinv, b, y, n); /* y = P*b */
-        Zcs_lsolve.cs_lsolve(N.L, y); /* y = L\y */
-        Zcs_ltsolve.cs_ltsolve(N.L, y); /* y = L'\y */
-        Zcs_pvec.cs_pvec(S.pinv, y, x, n); /* x = P'*y */
+        DZcs_ipvec.cs_ipvec(S.pinv, b, y, n); /* y = P*b */
+        DZcs_lsolve.cs_lsolve(N.L, y); /* y = L\y */
+        DZcs_ltsolve.cs_ltsolve(N.L, y); /* y = L'\y */
+        DZcs_pvec.cs_pvec(S.pinv, y, x, n); /* x = P'*y */
         t = toc(t);
         System.out.print(String.format("rechol:   time: %8.2f ms(incl solve) ", t));
         print_resid(true, E, x, b, resid); /* print residual */
         t = tic();
-        ok = Zcs_updown.cs_updown(N.L, -1, W, S.parent); /* downdate: L*L'-W*W' */
+        ok = DZcs_updown.cs_updown(N.L, -1, W, S.parent); /* downdate: L*L'-W*W' */
         t1 = toc(t);
         if (!ok)
             return (false);
         System.out.print(String.format("downdate: time: %8.2f\n", t1));
         t = tic();
-        Zcs_ipvec.cs_ipvec(S.pinv, b, y, n); /* y = P*b */
-        Zcs_lsolve.cs_lsolve(N.L, y); /* y = L\y */
-        Zcs_ltsolve.cs_ltsolve(N.L, y); /* y = L'\y */
-        Zcs_pvec.cs_pvec(S.pinv, y, x, n); /* x = P'*y */
+        DZcs_ipvec.cs_ipvec(S.pinv, b, y, n); /* y = P*b */
+        DZcs_lsolve.cs_lsolve(N.L, y); /* y = L\y */
+        DZcs_ltsolve.cs_ltsolve(N.L, y); /* y = L'\y */
+        DZcs_pvec.cs_pvec(S.pinv, y, x, n); /* x = P'*y */
         t = toc(t);
         System.out.print(String.format("downdate: time: %8.2f ms(incl solve) ", t1 + t));
         print_resid(true, C, x, b, resid); /* print residual */
