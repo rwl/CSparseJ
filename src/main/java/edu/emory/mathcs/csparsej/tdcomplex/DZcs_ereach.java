@@ -1,17 +1,17 @@
 /*
- * CSparse: a Concise Sparse matrix package.
+ * CXSparse: a Concise Sparse matrix package.
  * Copyright (C) 2006-2011, Timothy A. Davis.
  * Copyright (C) 2011-2012, Richard W. Lincoln.
- * http://www.cise.ufl.edu/research/sparse/CSparse
+ * http://www.cise.ufl.edu/research/sparse/CXSparse
  *
  * -------------------------------------------------------------------------
  *
- * CSparseJ is free software; you can redistribute it and/or
+ * CXSparseJ is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * CSparseJ is distributed in the hope that it will be useful,
+ * CXSparseJ is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
