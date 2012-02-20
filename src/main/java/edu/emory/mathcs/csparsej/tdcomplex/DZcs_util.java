@@ -155,4 +155,12 @@ public class DZcs_util {
     public static boolean CS_TRIPLET(DZcs A) {
         return (A != null && (A.nz >= 0));
     }
+
+    public static int[] cs_idone (int[] p, DZcs C, int[] w, boolean ok)
+    {
+//        cs_spfree (C) ;                     /* free temporary matrix */
+//        cs_free (w) ;                       /* free workspace */
+        return (ok ? p : null) ; /* return result, or free it */
+    }
+
 }
