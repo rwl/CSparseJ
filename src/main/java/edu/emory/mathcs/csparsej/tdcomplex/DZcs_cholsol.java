@@ -29,6 +29,14 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsn;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcss;
 
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.CS_CSC ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_schol.cs_schol ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_chol.cs_chol ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_ipvec.cs_ipvec ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_lsolve.cs_lsolve ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_ltsolve.cs_ltsolve ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_pvec.cs_pvec ;
+
 /**
  * Solves Ax=b where A is symmetric positive definite.
  *
@@ -38,39 +46,39 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcss;
  */
 public class DZcs_cholsol {
 
-    /**
-     * Solves Ax=b where A is symmetric positive definite; b is overwritten with
-     * solution.
-     *
-     * @param order
-     *            ordering method to use (0 or 1)
-     * @param A
-     *            column-compressed matrix, symmetric positive definite, only
-     *            upper triangular part is used
-     * @param b
-     *            right hand side, b is overwritten with solution
-     * @return true if successful, false on error
-     */
-    public static boolean cs_cholsol(int order, DZcs A, DZcsa b) {
-        DZcsa x;
-        DZcss S;
-        DZcsn N;
-        int n;
-        boolean ok;
-        if (!DZcs_util.CS_CSC(A) || b == null)
-            return (false); /* check inputs */
-        n = A.n;
-        S = DZcs_schol.cs_schol(order, A); /* ordering and symbolic analysis */
-        N = DZcs_chol.cs_chol(A, S); /* numeric Cholesky factorization */
-        x = new DZcsa(n); /* get workspace */
-        ok = (S != null && N != null);
-        if (ok) {
-            DZcs_ipvec.cs_ipvec(S.pinv, b, x, n); /* x = P*b */
-            DZcs_lsolve.cs_lsolve(N.L, x); /* x = L\x */
-            DZcs_ltsolve.cs_ltsolve(N.L, x); /* x = L'\x */
-            DZcs_pvec.cs_pvec(S.pinv, x, b, n); /* b = P'*x */
-        }
-        return (ok);
-    }
+	/**
+	 * Solves Ax=b where A is symmetric positive definite; b is overwritten with
+	 * solution.
+	 *
+	 * @param order
+	 *            ordering method to use (0 or 1)
+	 * @param A
+	 *            column-compressed matrix, symmetric positive definite, only
+	 *            upper triangular part is used
+	 * @param b
+	 *            right hand side, b is overwritten with solution
+	 * @return true if successful, false on error
+	 */
+	public static boolean cs_cholsol(int order, DZcs A, DZcsa b) {
+		DZcsa x;
+		DZcss S;
+		DZcsn N;
+		int n;
+		boolean ok;
+		if (!CS_CSC (A) || b == null) return (false);	/* check inputs */
+		n = A.n ;
+		S = cs_schol (order, A) ;			/* ordering and symbolic analysis */
+		N = cs_chol (A, S) ;				/* numeric Cholesky factorization */
+		x = new DZcsa (n) ;				/* get workspace */
+		ok = (S != null && N != null && x != null) ;
+		if (ok)
+		{
+			cs_ipvec (S.pinv, b, x, n);		/* x = P*b */
+			cs_lsolve (N.L, x) ;			/* x = L\x */
+			cs_ltsolve (N.L, x) ;			/* x = L'\x */
+			cs_pvec (S.pinv, x, b, n) ;		/* b = P'*x */
+		}
+		return (ok);
+	}
 
 }

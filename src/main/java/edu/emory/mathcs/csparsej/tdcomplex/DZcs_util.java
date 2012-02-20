@@ -25,7 +25,9 @@
 package edu.emory.mathcs.csparsej.tdcomplex;
 
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsd;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsn;
 
 /**
  * Various utilities.
@@ -156,11 +158,21 @@ public class DZcs_util {
         return (A != null && (A.nz >= 0));
     }
 
+    /* free workspace and return CS_INT array result */
     public static int[] cs_idone (int[] p, DZcs C, int[] w, boolean ok)
     {
 //        cs_spfree (C) ;                     /* free temporary matrix */
 //        cs_free (w) ;                       /* free workspace */
         return (ok ? p : null) ; /* return result, or free it */
+    }
+
+    /* free workspace and return a numeric factorization (Cholesky, LU, or QR) */
+    public static DZcsn cs_ndone (DZcsn N, DZcs C, int[] w, DZcsa x, boolean ok)
+    {
+//	    cs_spfree (C) ;                     /* free temporary matrix */
+//	    cs_free (w) ;                       /* free workspace */
+//	    cs_free (x) ;
+	    return (ok ? N : null) ;    /* return result if OK, else free it */
     }
 
 }
