@@ -22,10 +22,15 @@
  *
  */
 
-package edu.emory.mathcs.csparsej.tdcomplex;
+package edu.emory.mathcs.csparsej.tdcomplex ;
 
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa ;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs ;
+
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.CS_TRIPLET ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.cs_spalloc ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.cs_done ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_cumsum.cs_cumsum ;
 
 /**
  * Convert a triplet form to compressed-column form.
@@ -36,39 +41,34 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
  */
 public class DZcs_compress {
 
-    /**
-     * C = compressed-column form of a triplet matrix T. The columns of C are
-     * not sorted, and duplicate entries may be present in C.
-     *
-     * @param T
-     *            triplet matrix
-     * @return C if successful, null on error
-     */
-    public static DZcs cs_compress(DZcs T) {
-        int m, n, nz, p, k, Cp[], Ci[], w[], Ti[], Tj[];
-        DZcsa Cx = new DZcsa(), Tx = new DZcsa();
-        DZcs C;
-        if (!DZcs_util.CS_TRIPLET(T))
-            return (null); /* check inputs */
-        m = T.m;
-        n = T.n;
-        Ti = T.i;
-        Tj = T.p;
-        Tx.x = T.x;
-        nz = T.nz;
-        C = DZcs_util.cs_spalloc(m, n, nz, Tx.x != null, false); /* allocate result */
-        w = new int[n]; /* get workspace */
-        Cp = C.p;
-        Ci = C.i;
-        Cx.x = C.x;
-        for (k = 0; k < nz; k++)
-            w[Tj[k]]++; /* column counts */
-        DZcs_cumsum.cs_cumsum(Cp, w, n); /* column pointers */
-        for (k = 0; k < nz; k++) {
-            Ci[p = w[Tj[k]]++] = Ti[k]; /* A(i,j) is the pth entry in C */
-            if (Cx.x != null)
-                Cx.set(p, Tx.get(k));
-        }
-        return C;
-    }
+	/**
+	 * C = compressed-column form of a triplet matrix T. The columns of C are
+	 * not sorted, and duplicate entries may be present in C.
+	 *
+	 * @param T
+	 *		triplet matrix
+	 * @return C
+	 * 		if successful, null on error
+	 */
+	public static DZcs cs_compress(DZcs T) {
+		int m, n, nz, p, k, Cp[], Ci[], w[], Ti[], Tj[] ;
+		DZcsa Cx = new DZcsa (), Tx = new DZcsa () ;
+		DZcs C ;
+		if (!CS_TRIPLET(T)) return (null) ;		/* check inputs */
+		m = T.m ; n = T.n ; Ti = T.i ; Tj = T.p ; Tx.x = T.x ; nz = T.nz ;
+		C = cs_spalloc(m, n, nz, Tx.x != null, false) ;	/* allocate result */
+		w = new int [n] ;				/* get workspace */
+		if (C == null || w == null)
+			return (cs_done (C, w, null, false)) ;	/* out of memory */
+		Cp = C.p ; Ci = C.i ; Cx.x = C.x ;
+		for (k = 0 ; k < nz ; k++) w [Tj [k]]++ ;	/* column counts */
+		cs_cumsum (Cp, w, n) ;				/* column pointers */
+		for (k = 0 ; k < nz ; k++)
+		{
+			Ci [p = w [Tj [k]]++] = Ti [k] ;	/* A(i,j) is the pth entry in C */
+			if (Cx.x != null) Cx.set(p, Tx.get(k)) ;
+		}
+		return (cs_done (C, w, null, true)) ;		/* success; free w and return C */
+	}
+
 }

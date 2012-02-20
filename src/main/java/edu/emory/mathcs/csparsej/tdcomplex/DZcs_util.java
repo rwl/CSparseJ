@@ -158,6 +158,14 @@ public class DZcs_util {
         return (A != null && (A.nz >= 0));
     }
 
+    /* free workspace and return a sparse matrix result */
+    public static DZcs cs_done (DZcs C, int[] w, DZcsa x, boolean ok)
+    {
+//        cs_free (w) ;                       /* free workspace */
+//        cs_free (x) ;
+        return (ok ? C : null) ;   /* return result if OK, else free it */
+    }
+
     /* free workspace and return CS_INT array result */
     public static int[] cs_idone (int[] p, DZcs C, int[] w, boolean ok)
     {
