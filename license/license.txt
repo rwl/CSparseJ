@@ -1,5 +1,6 @@
 CSparse: a Concise Sparse matrix package.
-Copyright (c) 2006, Timothy A. Davis.
+Copyright (C) 2006-2011, Timothy A. Davis.
+Copyright (C) 2011-2012, Richard W. Lincoln.
 http://www.cise.ufl.edu/research/sparse/CSparse
 
 --------------------------------------------------------------------------------
