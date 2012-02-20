@@ -25,7 +25,9 @@
 package edu.emory.mathcs.csparsej.tdcomplex;
 
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
+
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.CS_TRIPLET ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.cs_sprealloc ;
 
 /**
  * Add an entry to a triplet matrix.
@@ -35,32 +37,31 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
  *
  */
 public class DZcs_entry {
-    /**
-     * Adds an entry to a triplet matrix. Memory-space and dimension of T are
-     * increased if necessary.
-     *
-     * @param T
-     *            triplet matrix; new entry added on output
-     * @param i
-     *            row index of new entry
-     * @param j
-     *            column index of new entry
-     * @param x
-     *            numerical value of new entry
-     * @return true if successful, false otherwise
-     */
-    public static boolean cs_entry(DZcs T, int i, int j, double[] x) {
-        if (!DZcs_util.CS_TRIPLET(T) || i < 0 || j < 0)
-            return (false); /* check inputs */
-        if (T.nz >= T.nzmax) {
-            DZcs_util.cs_sprealloc(T, 2 * (T.nzmax));
-        }
-        if (T.x != null)
-            DZcs_complex.cs_cset(T.x, T.nz, x);
-        T.i[T.nz] = i;
-        T.p[T.nz++] = j;
-        T.m = Math.max(T.m, i + 1);
-        T.n = Math.max(T.n, j + 1);
-        return (true);
-    }
+
+	/**
+	 * Adds an entry to a triplet matrix. Memory-space and dimension of T are
+	 * increased if necessary.
+	 *
+	 * @param T
+	 *            triplet matrix; new entry added on output
+	 * @param i
+	 *            row index of new entry
+	 * @param j
+	 *            column index of new entry
+	 * @param x
+	 *            numerical value of new entry
+	 * @return true if successful, false otherwise
+	 */
+	public static boolean cs_entry(DZcs T, int i, int j, double [] x)
+	{
+		if (!CS_TRIPLET (T) || i < 0 || j < 0) return (false) ;	/* check inputs */
+		if (T.nz >= T.nzmax && cs_sprealloc (T, 2*(T.nzmax))) return (false) ;
+		if (T.x != null) T.set(T.nz, x) ;
+		T.i [T.nz] = i ;
+		T.p [T.nz++] = j ;
+		T.m = Math.max(T.m, i + 1) ;
+		T.n = Math.max(T.n, j + 1) ;
+		return (true) ;
+	}
+
 }

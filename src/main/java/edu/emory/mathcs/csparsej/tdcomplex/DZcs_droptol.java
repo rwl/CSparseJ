@@ -25,7 +25,9 @@
 package edu.emory.mathcs.csparsej.tdcomplex;
 
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
+
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cabs ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_fkeep.cs_fkeep ;
 
 /**
  * Drop small entries from a sparse matrix.
@@ -36,23 +38,26 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
  */
 public class DZcs_droptol {
 
-    private static class Cs_tol implements DZcs_ifkeep {
-        @Override
-        public boolean fkeep(int i, int j, double[] aij, Object other) {
-            return (DZcs_complex.cs_cabs(aij) > (DZcs_complex.cs_cabs((double[]) other)));
-        }
-    }
+	private static class Cs_tol implements DZcs_ifkeep {
 
-    /**
-     * Removes entries from a matrix with absolute value <= tol.
-     *
-     * @param A
-     *            column-compressed matrix
-     * @param tol
-     *            drop tolerance
-     * @return nz, new number of entries in A, -1 on error
-     */
-    public static int cs_droptol(DZcs A, double tol) {
-        return (DZcs_fkeep.cs_fkeep(A, new Cs_tol(), tol)); /* keep all large entries */
-    }
+		public boolean fkeep(int i, int j, double [] aij, Object other)
+		{
+			return (cs_cabs (aij) > (cs_cabs ((double []) other))) ;
+		}
+	}
+
+	/**
+	 * Removes entries from a matrix with absolute value <= tol.
+	 *
+	 * @param A
+	 *            column-compressed matrix
+	 * @param tol
+	 *            drop tolerance
+	 * @return nz, new number of entries in A, -1 on error
+	 */
+	public static int cs_droptol(DZcs A, double tol)
+	{
+		return (cs_fkeep (A, new Cs_tol(), tol)) ;  /* keep all large entries */
+	}
+
 }

@@ -22,11 +22,14 @@
  *
  */
 
-package edu.emory.mathcs.csparsej.tdcomplex;
+package edu.emory.mathcs.csparsej.tdcomplex ;
 
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa ;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs ;
+
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cplus ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.CS_CSC ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.cs_sprealloc ;
 
 /**
  * Remove (and sum) duplicates.
@@ -37,43 +40,44 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
  */
 public class DZcs_dupl {
 
-    /**
-     * Removes and sums duplicate entries in a sparse matrix.
-     *
-     * @param A
-     *            column-compressed matrix
-     * @return true if successful, false on error
-     */
-    public static boolean cs_dupl(DZcs A) {
-        int i, j, p, q, nz = 0, n, m, Ap[], Ai[], w[];
-        DZcsa Ax = new DZcsa();
-        if (!DZcs_util.CS_CSC(A))
-            return (false);
-        /* check inputs */
-        m = A.m;
-        n = A.n;
-        Ap = A.p;
-        Ai = A.i;
-        Ax.x = A.x;
-        w = new int[m]; /* get workspace */
-        for (i = 0; i < m; i++)
-            w[i] = -1; /* row i not yet seen */
-        for (j = 0; j < n; j++) {
-            q = nz; /* column j will start at q */
-            for (p = Ap[j]; p < Ap[j + 1]; p++) {
-                i = Ai[p]; /* A(i,j) is nonzero */
-                if (w[i] >= q) {
-                    Ax.set(w[i], DZcs_complex.cs_cplus(Ax.get(w[i]), Ax.get(p))); /* A(i,j) is a duplicate */
-                } else {
-                    w[i] = nz; /* record where row i occurs */
-                    Ai[nz] = i; /* keep A(i,j) */
-                    Ax.set(nz++, Ax.get(p));
-                }
-            }
-            Ap[j] = q; /* record start of column j */
-        }
-        Ap[n] = nz; /* finalize A */
-        return DZcs_util.cs_sprealloc(A, 0); /* remove extra space from A */
-    }
+	/**
+	 * Removes and sums duplicate entries in a sparse matrix.
+	 *
+	 * @param A
+	 *            column-compressed matrix
+	 * @return true if successful, false on error
+	 */
+	public static boolean cs_dupl(DZcs A)
+	{
+		int i, j, p, q, nz = 0, n, m, Ap[], Ai[], w[] ;
+		DZcsa Ax = new DZcsa() ;
+		if (!CS_CSC (A)) return (false) ;		/* check inputs */
+		m = A.m ; n = A.n ; Ap = A.p ; Ai = A.i ; Ax.x = A.x ;
+		w = new int [m] ;				/* get workspace */
+//		if (w == null) return (false) ;			/* out of memory */
+		for (i = 0 ; i < m ; i++) w [i] = -1 ;		/* row i not yet seen */
+		for (j = 0 ; j < n ; j++)
+		{
+			q = nz ;				/* column j will start at q */
+			for (p = Ap [j] ; p < Ap [j+1] ; p++)
+			{
+				i = Ai [p] ;			/* A(i,j) is nonzero */
+				if (w [i] >= q)
+				{
+					Ax.set(w [i], cs_cplus(Ax.get(w [i]), Ax.get(p))); /* A(i,j) is a duplicate */
+				}
+				else
+				{
+					w [i] = nz ;		/* record where row i occurs */
+					Ai [nz] = i ;		/* keep A(i,j) */
+					Ax.set(nz++, Ax.get(p)) ;
+				}
+			}
+			Ap [j] = q ;				/* record start of column j */
+		}
+		Ap [n] = nz ;					/* finalize A */
+		w = null ;
+		return (cs_sprealloc (A, 0)) ;			/* remove extra space from A */
+	}
 
 }

@@ -22,10 +22,13 @@
  *
  */
 
-package edu.emory.mathcs.csparsej.tdcomplex;
+package edu.emory.mathcs.csparsej.tdcomplex ;
 
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs ;
+
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_creal ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cimag ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_fkeep.cs_fkeep ;
 
 /**
  * Drop zeros from a sparse matrix.
@@ -36,22 +39,24 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
  */
 public class DZcs_dropzeros {
 
-    private static class Cs_nonzero implements DZcs_ifkeep {
-        @Override
-        public boolean fkeep(int i, int j, double[] aij, Object other) {
-            return (DZcs_complex.cs_creal(aij) != 0 && DZcs_complex.cs_cimag(aij) != 0);
-        }
-    }
+	private static class Cs_nonzero implements DZcs_ifkeep {
 
-    /**
-     * Removes numerically zero entries from a matrix.
-     *
-     * @param A
-     *            column-compressed matrix
-     * @return nz, new number of entries in A, -1 on error
-     */
-    public static int cs_dropzeros(DZcs A) {
-        return (DZcs_fkeep.cs_fkeep(A, new Cs_nonzero(), null)); /* keep all nonzero entries */
-    }
+		public boolean fkeep(int i, int j, double[] aij, Object other)
+		{
+			return (cs_creal(aij) != 0 && cs_cimag(aij) != 0) ;
+		}
+	}
+
+	/**
+	 * Removes numerically zero entries from a matrix.
+	 *
+	 * @param A
+	 *            column-compressed matrix
+	 * @return nz, new number of entries in A, -1 on error
+	 */
+	public static int cs_dropzeros(DZcs A)
+	{
+		return (cs_fkeep(A, new Cs_nonzero(), null));  /* keep all nonzero entries */
+	}
 
 }

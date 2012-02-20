@@ -183,4 +183,12 @@ public class DZcs_util {
 	    return (ok ? N : null) ;    /* return result if OK, else free it */
     }
 
+    /* free workspace and return a csd result */
+    public static DZcsd cs_ddone (DZcsd D, DZcs C, int [] w, boolean ok)
+    {
+//	    cs_spfree (C) ;                     /* free temporary matrix */
+//	    cs_free (w) ;                       /* free workspace */
+	    return (ok ? D : null) ;    /* return result if OK, else free it */
+    }
+
 }
