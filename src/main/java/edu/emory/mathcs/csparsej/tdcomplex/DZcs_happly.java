@@ -22,11 +22,17 @@
  *
  */
 
-package edu.emory.mathcs.csparsej.tdcomplex;
+package edu.emory.mathcs.csparsej.tdcomplex ;
 
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa ;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs ;
+
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.CS_CSC ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cmult ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_czero ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cplus ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cminus ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_conj ;
 
 /**
  * Apply Householder reflection.
@@ -37,39 +43,37 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
  */
 public class DZcs_happly {
 
-    /**
-     * Applies a Householder reflection to a dense vector, x = (I -
-     * beta*v*v')*x.
-     *
-     * @param V
-     *            column-compressed matrix of Householder vectors
-     * @param i
-     *            v = V(:,i), the ith column of V
-     * @param beta
-     *            scalar beta
-     * @param x
-     *            vector x of size m
-     * @return true if successful, false on error
-     */
-    public static boolean cs_happly(DZcs V, int i, double beta, DZcsa x) {
-        int p, Vp[], Vi[];
-        DZcsa Vx = new DZcsa();
-        double[] tau = DZcs_complex.cs_czero();
-        if (!DZcs_util.CS_CSC(V) || x == null)
-            return (false); /* check inputs */
-        Vp = V.p;
-        Vi = V.i;
-        Vx.x = V.x;
-        for (p = Vp[i]; p < Vp[i + 1]; p++) /* tau = v'*x */
-        {
-            tau = DZcs_complex.cs_cplus(tau, DZcs_complex.cs_cmult(Vx.get(p), x.get(Vi[p])));
-        }
-        tau = DZcs_complex.cs_cmult(tau, beta); /* tau = beta*(v'*x) */
-        for (p = Vp[i]; p < Vp[i + 1]; p++) /* x = x - v*tau */
-        {
-            x.set(Vi[p], DZcs_complex.cs_cminus(x.get(Vi[p]), DZcs_complex.cs_cmult(Vx.get(p), tau)));
-        }
-        return (true);
-    }
+	/**
+	 * Applies a Householder reflection to a dense vector, x = (I -
+	 * beta*v*v')*x.
+	 *
+	 * @param V
+	 *            column-compressed matrix of Householder vectors
+	 * @param i
+	 *            v = V(:,i), the ith column of V
+	 * @param beta
+	 *            scalar beta
+	 * @param x
+	 *            vector x of size m
+	 * @return true if successful, false on error
+	 */
+	public static boolean cs_happly(DZcs V, int i, double beta, DZcsa x)
+	{
+		int p, Vp[], Vi[] ;
+		DZcsa Vx = new DZcsa() ;
+		double[] tau = cs_czero() ;
+		if (!CS_CSC (V) || x == null) return (false) ;	/* check inputs */
+		Vp = V.p ; Vi = V.i ; Vx.x = V.x ;
+		for (p = Vp [i] ; p < Vp [i+1] ; p++)		/* tau = v'*x */
+		{
+		    tau = cs_cplus(tau, cs_conj(cs_cmult(Vx.get(p), x.get(Vi [p])))) ;
+		}
+		tau = cs_cmult(tau, beta) ;			/* tau = beta*(v'*x) */
+		for (p = Vp [i] ; p < Vp [i+1] ; p++) 		/* x = x - v*tau */
+		{
+			x.set(Vi [p], cs_cminus(x.get(Vi [p]), cs_cmult(Vx.get(p), tau))) ;
+		}
+		return (true) ;
+	}
 
 }

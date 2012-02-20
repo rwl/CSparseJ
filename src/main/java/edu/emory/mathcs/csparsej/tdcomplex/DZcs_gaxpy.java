@@ -22,11 +22,14 @@
  *
  */
 
-package edu.emory.mathcs.csparsej.tdcomplex;
+package edu.emory.mathcs.csparsej.tdcomplex ;
 
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa ;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs ;
+
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.CS_CSC ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cplus ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cmult ;
 
 /**
  * Sparse matrix times dense vector.
@@ -37,32 +40,31 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
  */
 public class DZcs_gaxpy {
 
-    /**
-     * Sparse matrix times dense column vector, y = A*x+y.
-     *
-     * @param A
-     *            column-compressed matrix
-     * @param x
-     *            size n, vector x
-     * @param y
-     *            size m, vector y
-     * @return true if successful, false on error
-     */
-    public static boolean cs_gaxpy(DZcs A, DZcsa x, DZcsa y) {
-        int p, j, n, Ap[], Ai[];
-        DZcsa Ax = new DZcsa();
-        if (!DZcs_util.CS_CSC(A) || x == null || y == null)
-            return (false); /* check inputs */
-        n = A.n;
-        Ap = A.p;
-        Ai = A.i;
-        Ax.x = A.x;
-        for (j = 0; j < n; j++) {
-            for (p = Ap[j]; p < Ap[j + 1]; p++) {
-                y.set(Ai[p], DZcs_complex.cs_cplus(y.get(Ai[p]), DZcs_complex.cs_cmult(Ax.get(p), x.get(j))));
-            }
-        }
-        return (true);
-    }
+	/**
+	 * Sparse matrix times dense column vector, y = A*x+y.
+	 *
+	 * @param A
+	 *            column-compressed matrix
+	 * @param x
+	 *            size n, vector x
+	 * @param y
+	 *            size m, vector y
+	 * @return true if successful, false on error
+	 */
+	public static boolean cs_gaxpy (DZcs A, DZcsa x, DZcsa y)
+	{
+		int p, j, n, Ap[], Ai[] ;
+		DZcsa Ax = new DZcsa() ;
+		if (!CS_CSC (A) || x == null || y == null) return (false) ;	/* check inputs */
+		n = A.n ; Ap = A.p ; Ai = A.i ; Ax.x = A.x ;
+		for (j = 0 ; j < n ; j++)
+		{
+			for (p = Ap [j] ; p < Ap [j+1] ; p++)
+			{
+				y.set(Ai [p], cs_cplus(y.get(Ai [p]), cs_cmult(Ax.get(p), x.get(j)))) ;
+			}
+		}
+		return (true) ;
+	}
 
 }

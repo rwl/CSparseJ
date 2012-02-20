@@ -26,7 +26,11 @@ package edu.emory.mathcs.csparsej.tdcomplex;
 
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
+
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cone ;
+
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.CS_CSC ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.cs_sprealloc ;
 
 /**
  * Drop entries from a sparse matrix.
@@ -37,40 +41,39 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
  */
 public class DZcs_fkeep {
 
-    /**
-     * Drops entries from a sparse matrix;
-     *
-     * @param A
-     *            column-compressed matrix
-     * @param fkeep
-     *            drop aij if fkeep.fkeep(i,j,aij,other) is false
-     * @param other
-     *            optional parameter to fkeep
-     * @return nz, new number of entries in A, -1 on error
-     */
-    public static int cs_fkeep(DZcs A, DZcs_ifkeep fkeep, Object other) {
-        int j, p, nz = 0, n, Ap[], Ai[];
-        DZcsa Ax = new DZcsa();
-        if (!DZcs_util.CS_CSC(A))
-            return (-1); /* check inputs */
-        n = A.n;
-        Ap = A.p;
-        Ai = A.i;
-        Ax.x = A.x;
-        for (j = 0; j < n; j++) {
-            p = Ap[j]; /* get current location of col j */
-            Ap[j] = nz; /* record new location of col j */
-            for (; p < Ap[j + 1]; p++) {
-                if (fkeep.fkeep(Ai[p], j, Ax.x != null ? Ax.get(p) : DZcs_complex.cs_cone(), other)) {
-                    if (Ax.x != null)
-                        Ax.set(nz, Ax.get(p)); /* keep A(i,j) */
-                    Ai[nz++] = Ai[p];
-                }
-            }
-        }
-        Ap[n] = nz; /* finalize A */
-        DZcs_util.cs_sprealloc(A, 0); /* remove extra space from A */
-        return (nz);
-    }
+	/**
+	 * Drops entries from a sparse matrix;
+	 *
+	 * @param A
+	 *            column-compressed matrix
+	 * @param fkeep
+	 *            drop aij if fkeep.fkeep(i,j,aij,other) is false
+	 * @param other
+	 *            optional parameter to fkeep
+	 * @return nz, new number of entries in A, -1 on error
+	 */
+	public static int cs_fkeep(DZcs A, DZcs_ifkeep fkeep, Object other)
+	{
+		int j, p, nz = 0, n, Ap[], Ai[] ;
+		DZcsa Ax = new DZcsa() ;
+		if (!CS_CSC (A)) return (-1) ;		/* check inputs */
+		n = A.n ; Ap = A.p ; Ai = A.i ; Ax.x = A.x ;
+		for (j = 0 ; j < n ; j++)
+		{
+			p = Ap [j] ;			/* get current location of col j */
+			Ap [j] = nz ;			/* record new location of col j */
+			for ( ; p < Ap [j+1] ; p++)
+			{
+				if (fkeep.fkeep(Ai [p], j, Ax.x != null ? Ax.get(p) : cs_cone(), other))
+				{
+					if (Ax.x != null) Ax.set(nz, Ax.get(p));  /* keep A(i,j) */
+					Ai [nz++] = Ai [p] ;
+				}
+			}
+		}
+		Ap [n] = nz ;				/* finalize A */
+		cs_sprealloc (A, 0) ;			/* remove extra space from A */
+		return (nz) ;
+	}
 
 }

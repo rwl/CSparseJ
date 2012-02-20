@@ -22,7 +22,7 @@
  *
  */
 
-package edu.emory.mathcs.csparsej.tdcomplex;
+package edu.emory.mathcs.csparsej.tdcomplex ;
 
 /**
  * Interface for Zcs_fkeep.
@@ -33,18 +33,19 @@ package edu.emory.mathcs.csparsej.tdcomplex;
  */
 public interface DZcs_ifkeep {
 
-    /**
-     * Function used for entries from a sparse matrix
-     *
-     * @param i
-     *            row index
-     * @param j
-     *            column index
-     * @param aij
-     *            value
-     * @param other
-     *            optional parameter
-     * @return if false then aij should be dropped
-     */
-    public boolean fkeep(int i, int j, double[] aij, Object other);
+	/**
+	 * Function used for entries from a sparse matrix
+	 *
+	 * @param i
+	 *            row index
+	 * @param j
+	 *            column index
+	 * @param aij
+	 *            value
+	 * @param other
+	 *            optional parameter
+	 * @return if false then aij should be dropped
+	 */
+	public boolean fkeep(int i, int j, double [] aij, Object other) ;
+
 }
