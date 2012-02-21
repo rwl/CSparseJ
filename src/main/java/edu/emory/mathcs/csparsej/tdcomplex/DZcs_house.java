@@ -60,28 +60,29 @@ public class DZcs_house {
 	 *            the length of x
 	 * @return norm2(x), -1 on error
 	 */
-	public static double [] cs_house(DZcsa x, double beta, int n)
+	public static double [] cs_house(DZcsa x, int x_offset, double[] beta, int n)
 	{
 		double[] s = cs_czero() ;
 		int i ;
 		if (x == null) return new double [] {-1.0, 0.0} ;	/* check inputs */
 		/* s = norm(x) */
-		for (i = 0 ; i < n ; i++) s = cs_cplus(s, cs_cmult(x.get(i), cs_conj(x.get(i)))) ;
+		for (i = 0 ; i < n ; i++)  // TODO: check i = 1
+			s = cs_cplus(s, cs_cmult(x.get(x_offset + i), cs_conj(x.get(x_offset + i)))) ;
 		s = cs_csqrt(s) ;
 		if (cs_cequal(s, cs_czero()))
 		{
-			beta = 0.0 ;
-			x.set(0, cs_cone()) ;
+			beta [0] = 0.0 ;
+			x.set(x_offset + 0, cs_cone()) ;
 		}
 		else
 		{
 			/* s = sign(x[0]) * norm (x) ; */
-			if (!cs_cequal(x.get(0), cs_czero()))
+			if (!cs_cequal(x.get(x_offset + 0), cs_czero()))
 			{
-				s = cs_cmult(s, cs_cdiv(x.get(0), new double [] {cs_cabs(x.get(0)), 0.0})) ;
+				s = cs_cmult(s, cs_cdiv(x.get(x_offset + 0), new double [] {cs_cabs(x.get(x_offset + 0)), 0.0})) ;
 			}
-			x.set(0, cs_cplus(x.get(0), s)) ;
-			beta = 1 / cs_creal( cs_cmult(cs_conj(s), x.get(0)) ) ;
+			x.set(x_offset + 0, cs_cplus(x.get(x_offset + 0), s)) ;
+			beta [0] = 1 / cs_creal( cs_cmult(cs_conj(s), x.get(x_offset + 0)) ) ;
 		}
 		return (s) ;
 	}

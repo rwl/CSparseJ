@@ -44,10 +44,10 @@ public class DZcs_cumsum {
 	 *            length of c
 	 * @return sum (c), null on error
 	 */
-	public static double cs_cumsum(int [] p, int [] c, int n)
+	public static int cs_cumsum(int [] p, int [] c, int n)
 	{
 		int i, nz = 0 ;
-		double nz2 = 0 ;
+		int nz2 = 0 ;
 		if (p == null || c == null)
 			return (-1) ;		/* check inputs */
 		for (i = 0 ; i < n ; i++)

@@ -27,6 +27,10 @@ package edu.emory.mathcs.csparsej.tdcomplex;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
 
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_norm.cs_norm ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_creal ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cimag ;
+
 /**
  * Print a sparse matrix.
  *
@@ -36,55 +40,67 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
  */
 public class DZcs_print {
 
-    /**
-     * Prints a sparse matrix.
-     *
-     * @param A
-     *            sparse matrix (triplet ot column-compressed)
-     * @param brief
-     *            print all of A if false, a few entries otherwise
-     * @return true if successful, false on error
-     */
-    public static boolean cs_print(DZcs A, boolean brief) {
-        int p, j, m, n, nzmax, nz, Ap[], Ai[];
-        DZcsa Ax = new DZcsa();
-        if (A == null) {
-            System.out.print("(null)\n");
-            return (false);
-        }
-        m = A.m;
-        n = A.n;
-        Ap = A.p;
-        Ai = A.i;
-        Ax.x = A.x;
-        nzmax = A.nzmax;
-        nz = A.nz;
-        System.out.print(String.format("CXSparseJ Version %d.%d.%d, %s.  %s\n", DZcs_common.CS_VER, DZcs_common.CS_SUBVER,
-                DZcs_common.CS_SUBSUB, DZcs_common.CS_DATE, DZcs_common.CS_COPYRIGHT));
-        if (nz < 0) {
-            System.out.print(String.format("%d-by-%d, nzmax: %d nnz: %d, 1-norm: %g\n", m, n, nzmax, Ap[n], DZcs_norm
-                    .cs_norm(A)));
-            for (j = 0; j < n; j++) {
-                System.out.print(String.format("    col %d : locations %d to %d\n", j, Ap[j], Ap[j + 1] - 1));
-                for (p = Ap[j]; p < Ap[j + 1]; p++) {
-                    System.out.print(String.format("      %d : %g\n", Ai[p], Ax.x != null ? Ax.get(p) : 1));
-                    if (brief && p > 20) {
-                        System.out.print("  ...\n");
-                        return (true);
-                    }
-                }
-            }
-        } else {
-            System.out.print(String.format("triplet: %d-by-%d, nzmax: %d nnz: %d\n", m, n, nzmax, nz));
-            for (p = 0; p < nz; p++) {
-                System.out.print(String.format("    %d %d : %g\n", Ai[p], Ap[p], Ax.x != null ? Ax.get(p) : 1));
-                if (brief && p > 20) {
-                    System.out.print("  ...\n");
-                    return (true);
-                }
-            }
-        }
-        return (true);
-    }
+	/**
+	 * Prints a sparse matrix.
+	 *
+	 * @param A
+	 *            sparse matrix (triplet ot column-compressed)
+	 * @param brief
+	 *            print all of A if false, a few entries otherwise
+	 * @return true if successful, false on error
+	 */
+	public static boolean cs_print(DZcs A, boolean brief)
+	{
+		int p, j, m, n, nzmax, nz, Ap[], Ai[] ;
+		DZcsa Ax = new DZcsa() ;
+		if (A == null)
+		{
+		    System.out.print("(null)\n") ;
+		    return (false) ;
+		}
+		m = A.m ; n = A.n ; Ap = A.p ; Ai = A.i ; Ax.x = A.x ;
+		nzmax = A.nzmax ; nz = A.nz ;
+		System.out.printf("CXSparseJ Version %d.%d.%d, %s.  %s\n",
+			DZcs_common.CS_VER, DZcs_common.CS_SUBVER, DZcs_common.CS_SUBSUB,
+			DZcs_common.CS_DATE, DZcs_common.CS_COPYRIGHT) ;
+		if (nz < 0)
+		{
+			System.out.printf("%d-by-%d, nzmax: %d nnz: %d, 1-norm: %g\n", m, n,
+				nzmax, Ap[n], cs_norm (A)) ;
+			for (j = 0 ; j < n ; j++)
+			{
+				System.out.printf("    col %d : locations %d to %d\n",
+					j, Ap [j], Ap [j+1] - 1) ;
+				for (p = Ap [j] ; p < Ap [j+1] ; p++)
+				{
+					System.out.printf("      %d : (%g, %g)\n", Ai [p],
+						Ax.x != null ? cs_creal (Ax.get(p)) : 1,
+						Ax.x != null ? cs_cimag (Ax.get(p)) : 0) ;
+					if (brief && p > 20)
+					{
+						System.out.print("  ...\n") ;
+						return (true) ;
+					}
+				}
+			}
+		}
+		else
+		{
+			System.out.printf("triplet: %d-by-%d, nzmax: %d nnz: %d\n",
+				m, n, nzmax, nz) ;
+			for (p = 0 ; p < nz ; p++)
+			{
+				System.out.printf("    %d %d : (%g, %g)\n", Ai [p], Ap [p],
+					Ax.x != null ? cs_creal (Ax.get(p)) : 1,
+					Ax.x != null ? cs_cimag (Ax.get(p)) : 0) ;
+				if (brief && p > 20)
+				{
+					System.out.print("  ...\n") ;
+					return (true) ;
+				}
+			}
+		}
+		return (true) ;
+	}
 
 }

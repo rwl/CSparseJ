@@ -26,7 +26,9 @@ package edu.emory.mathcs.csparsej.tdcomplex;
 
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
+
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.CS_CSC ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cabs ;
 
 /**
  * Sparse matrix 1-norm.
@@ -37,28 +39,27 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
  */
 public class DZcs_norm {
 
-    /**
-     * Computes the 1-norm of a sparse matrix = max (sum (abs (A))), largest
-     * column sum.
-     *
-     * @param A
-     *            column-compressed matrix
-     * @return the 1-norm if successful, -1 on error
-     */
-    public static double cs_norm(DZcs A) {
-        int p, j, n, Ap[];
-        DZcsa Ax = new DZcsa();
-        double norm = 0, s;
-        if (!DZcs_util.CS_CSC(A) || A.x == null)
-            return (-1); /* check inputs */
-        n = A.n;
-        Ap = A.p;
-        Ax.x = A.x;
-        for (j = 0; j < n; j++) {
-            for (s = 0, p = Ap[j]; p < Ap[j + 1]; p++)
-                s += DZcs_complex.cs_cabs(Ax.get(p));
-            norm = Math.max(norm, s);
-        }
-        return (norm);
-    }
+	/**
+	 * Computes the 1-norm of a sparse matrix = max (sum (abs (A))), largest
+	 * column sum.
+	 *
+	 * @param A
+	 *            column-compressed matrix
+	 * @return the 1-norm if successful, -1 on error
+	 */
+	public static double cs_norm(DZcs A)
+	{
+		int p, j, n, Ap[] ;
+		DZcsa Ax = new DZcsa() ;
+		double norm = 0, s ;
+		if (!CS_CSC (A) || A.x == null) return (-1) ;	/* check inputs */
+		n = A.n ; Ap = A.p ; Ax.x = A.x ;
+		for (j = 0 ; j < n ; j++)
+		{
+			for (s = 0, p = Ap [j] ; p < Ap [j+1] ; p++) s += cs_cabs(Ax.get(p)) ;
+			norm = Math.max(norm, s) ;
+		}
+		return (norm) ;
+	}
+
 }

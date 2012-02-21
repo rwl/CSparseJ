@@ -22,11 +22,17 @@
  *
  */
 
-package edu.emory.mathcs.csparsej.tdcomplex;
+package edu.emory.mathcs.csparsej.tdcomplex ;
 
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa ;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs ;
+
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.CS_CSC ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.cs_done ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.cs_sprealloc ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.cs_spalloc ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_scatter.cs_scatter ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cone ;
 
 /**
  * Sparse matrix multiply.
@@ -37,53 +43,48 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
  */
 public class DZcs_multiply {
 
-    /**
-     * Sparse matrix multiplication, C = A*B
-     *
-     * @param A
-     *            column-compressed matrix
-     * @param B
-     *            column-compressed matrix
-     * @return C = A*B, null on error
-     */
-    public static DZcs cs_multiply(DZcs A, DZcs B) {
-        int p, j, nz = 0, anz, Cp[], Ci[], Bp[], m, n, bnz, w[], Bi[];
-        DZcsa x, Bx = new DZcsa(), Cx = new DZcsa();
-        boolean values;
-        DZcs C;
-        if (!DZcs_util.CS_CSC(A) || !DZcs_util.CS_CSC(B))
-            return (null); /* check inputs */
-        if (A.n != B.m)
-            return (null);
-        m = A.m;
-        anz = A.p[A.n];
-        n = B.n;
-        Bp = B.p;
-        Bi = B.i;
-        Bx.x = B.x;
-        bnz = Bp[n];
-        w = new int[m]; /* get workspace */
-        values = (A.x != null) && (Bx.x != null);
-        x = values ? new DZcsa(m) : null; /* get workspace */
-        C = DZcs_util.cs_spalloc(m, n, anz + bnz, values, false); /* allocate result */
-        Cp = C.p;
-        for (j = 0; j < n; j++) {
-            if (nz + m > C.nzmax) {
-                DZcs_util.cs_sprealloc(C, 2 * (C.nzmax) + m);
-            }
-            Ci = C.i;
-            Cx.x = C.x; /* C.i and C.x may be reallocated */
-            Cp[j] = nz; /* column j of C starts here */
-            for (p = Bp[j]; p < Bp[j + 1]; p++) {
-                nz = DZcs_scatter.cs_scatter(A, Bi[p], (Bx.x != null) ? Bx.get(p) : DZcs_complex.cs_cone(), w, x, j + 1, C, nz);
-            }
-            if (values)
-                for (p = Cp[j]; p < nz; p++)
-                    Cx.set(p, x.get(Ci[p]));
-        }
-        Cp[n] = nz; /* finalize the last column of C */
-        DZcs_util.cs_sprealloc(C, 0); /* remove extra space from C */
-        return C;
-    }
+	/**
+	 * Sparse matrix multiplication, C = A*B
+	 *
+	 * @param A
+	 *            column-compressed matrix
+	 * @param B
+	 *            column-compressed matrix
+	 * @return C = A*B, null on error
+	 */
+	public static DZcs cs_multiply(DZcs A, DZcs B)
+	{
+		int p, j, nz = 0, anz, Cp[], Ci[], Bp[], m, n, bnz, w[], Bi[] ;
+		DZcsa x, Bx = new DZcsa(), Cx = new DZcsa() ;
+		boolean values ;
+		DZcs C ;
+		if (!CS_CSC (A) || !CS_CSC (B)) return (null) ;		/* check inputs */
+		if (A.n != B.m) return (null) ;
+		m = A.m ; anz = A.p [A.n] ;
+		n = B.n ; Bp = B.p ; Bi = B.i ; Bx.x = B.x ; bnz = Bp [n] ;
+		w = new int [m] ;					/* get workspace */
+		values = (A.x != null) && (Bx.x != null) ;
+		x = values ? new DZcsa (m) : null ;			/* get workspace */
+		C = cs_spalloc (m, n, anz + bnz, values, false);	/* allocate result */
+		if (C == null || w == null || (values && x == null)) return (cs_done (C, w, x, false)) ;
+		Cp = C.p ;
+		for (j = 0 ; j < n ; j++)
+		{
+			if (nz + m > C.nzmax && !cs_sprealloc (C, 2 * (C.nzmax) + m))
+			{
+				return (cs_done (C, w, x, false)) ;	/* out of memory */
+			}
+			Ci = C.i ; Cx.x = C.x ;				/* C.i and C.x may be reallocated */
+			Cp [j] = nz ;					/* column j of C starts here */
+			for (p = Bp [j]; p < Bp [j+1] ; p++)
+			{
+				nz = cs_scatter (A, Bi[p], (Bx.x != null) ? Bx.get(p) : cs_cone(), w, x, j+1, C, nz) ;
+			}
+			if (values) for (p = Cp [j]; p < nz; p++) Cx.set(p, x.get(Ci [p])) ;
+		}
+		Cp [n] = nz ; 						/* finalize the last column of C */
+		cs_sprealloc (C, 0);					/* remove extra space from C */
+		return (cs_done (C, w, x, true)) ;			/* success; free workspace, return C */
+	}
 
 }

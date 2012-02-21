@@ -22,10 +22,19 @@
  *
  */
 
-package edu.emory.mathcs.csparsej.tdcomplex;
+package edu.emory.mathcs.csparsej.tdcomplex ;
 
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcss;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs ;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcss ;
+
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.CS_CSC ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_amd.cs_amd ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_pinv.cs_pinv ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_symperm.cs_symperm ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_etree.cs_etree ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_post.cs_post ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_counts.cs_counts ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_cumsum.cs_cumsum ;
 
 /**
  * Symbolic Cholesky ordering and analysis.
@@ -35,33 +44,39 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcss;
  *
  */
 public class DZcs_schol {
-    /**
-     * Ordering and symbolic analysis for a Cholesky factorization.
-     *
-     * @param order
-     *            ordering option (0 or 1)
-     * @param A
-     *            column-compressed matrix
-     * @return symbolic analysis for Cholesky, null on error
-     */
-    public static DZcss cs_schol(int order, DZcs A) {
-        int n, c[], post[], P[];
-        DZcs C;
-        DZcss S;
-        if (!DZcs_util.CS_CSC(A))
-            return (null); /* check inputs */
-        n = A.n;
-        S = new DZcss(); /* allocate result S */
-        P = DZcs_amd.cs_amd(order, A); /* P = amd(A+A'), or natural */
-        S.pinv = DZcs_pinv.cs_pinv(P, n); /* find inverse permutation */
-        if (order != 0 && S.pinv == null)
-            return null;
-        C = DZcs_symperm.cs_symperm(A, S.pinv, false); /* C = spones(triu(A(P,P))) */
-        S.parent = DZcs_etree.cs_etree(C, false); /* find etree of C */
-        post = DZcs_post.cs_post(S.parent, n); /* postorder the etree */
-        c = DZcs_counts.cs_counts(C, S.parent, post, false); /* find column counts of chol(C) */
-        S.cp = new int[n + 1]; /* allocate result S.cp */
-        S.unz = S.lnz = DZcs_cumsum.cs_cumsum(S.cp, c, n); /* find column pointers for L */
-        return ((S.lnz >= 0) ? S : null);
-    }
+
+	/**
+	 * Ordering and symbolic analysis for a Cholesky factorization.
+	 *
+	 * @param order
+	 *            ordering option (0 or 1)
+	 * @param A
+	 *            column-compressed matrix
+	 * @return symbolic analysis for Cholesky, null on error
+	 */
+	public static DZcss cs_schol(int order, DZcs A)
+	{
+		int n, c[], post[], P[] ;
+		DZcs C ;
+		DZcss S ;
+		if (!CS_CSC (A)) return (null);		/* check inputs */
+		n = A.n ;
+		S = new DZcss() ; 			/* allocate result S */
+		if (S == null) return (null) ;		/* out of memory */
+		P = cs_amd (order, A) ;			/* P = amd(A+A'), or natural */
+		S.pinv = cs_pinv (P, n) ;		/* find inverse permutation */
+		P = null ;
+		if (order != 0 && S.pinv == null) return null ;
+		C = cs_symperm (A, S.pinv, false) ;	/* C = spones(triu(A(P,P))) */
+		S.parent = cs_etree (C, false) ;	/* find etree of C */
+		post = cs_post (S.parent, n) ;		/* postorder the etree */
+		c = cs_counts (C, S.parent, post, false) ;  /* find column counts of chol(C) */
+		post = null;
+		C = null ;
+		S.cp = new int [n+1] ;			/* allocate result S.cp */
+		S.unz = S.lnz = (int) cs_cumsum (S.cp, c, n) ;  /* find column pointers for L */
+		c = null ;
+		return ((S.lnz >= 0) ? S : null) ;
+	}
+
 }
