@@ -22,24 +22,28 @@
  *
  */
 
-package edu.emory.mathcs.csparsej.tdcomplex.demo;
+package edu.emory.mathcs.csparsej.tdcomplex.demo ;
 
-import edu.emory.mathcs.csparsej.tdcomplex.demo.Zcs_demo.Zproblem;
+import edu.emory.mathcs.csparsej.tdcomplex.demo.DZcs_demo.DZproblem ;
 
 /**
- * Read a matrix from a file and solve a linear system.
+ * Read a matrix, solve a linear system, update/downdate.
  *
  * @author Piotr Wendykier (piotr.wendykier@gmail.com)
  * @author Richard Lincoln (r.w.lincoln@gmail.com)
  *
  */
-public class Zcs_demo2 {
-    public static void main(String[] args) {
-        Zproblem Prob = null;
-        if (args.length == 0) {
-            throw new IllegalArgumentException("Usage: java edu.emory.mathcs.csparsej.tdcomplex.demo.Zcs_demo2 fileName");
-        }
-        Prob = Zcs_demo.get_problem(args[0], 1e-14);
-        Zcs_demo.demo2(Prob);
-    }
+public class DZcs_demo3 {
+
+	public static void main(String[] args)
+	{
+		DZproblem Prob = null ;
+		if (args.length == 0)
+		{
+			throw new IllegalArgumentException("Usage: java edu.emory.mathcs.csparsej.tdcomplex.demo.DZcs_demo3 fileName") ;
+		}
+		Prob = DZcs_demo.get_problem (args[0], 1e-14) ;
+		DZcs_demo.demo3 (Prob) ;
+	}
+
 }

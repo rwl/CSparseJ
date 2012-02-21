@@ -172,6 +172,12 @@ public class DZcs_complex {
 		} ;
 	}
 
+	public static final double [] cs_cneg(double [] x)
+	{
+		double[] neg_one = new double[] {-1.0, 0.0} ;
+		return cs_cmult(neg_one, x) ;
+	}
+
 	public static final double [] cs_csqrt(double [] x)
 	{
 		double [] z = new double [2] ;

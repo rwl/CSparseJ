@@ -26,7 +26,6 @@ package edu.emory.mathcs.csparsej.tdcomplex;
 
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
 
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.CS_CSC ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_czero ;
@@ -65,8 +64,8 @@ public class DZcs_updown {
 	{
 		int n, p, f, j, Lp[], Li[], Cp[], Ci[] ;
 		DZcsa Lx = new DZcsa(), Cx = new DZcsa(), w ;
-		double[] alpha, gamma, w1, w2, phase ;
-		double beta = 1, delta, beta2 = 1 ;
+		double[] alpha, gamma, w1, w2 ;
+		double phase, beta = 1, delta, beta2 = 1 ;
 		if (!CS_CSC(L) || !CS_CSC(C) || parent == null)
 			return (false) ;				/* check inputs */
 		Lp = L.p ; Li = L.i ; Lx.x = L.x ; n = L.n ;
@@ -89,28 +88,23 @@ public class DZcs_updown {
 			if (beta2 <= 0) break ;				/* not positive definite */
 			beta2 = Math.sqrt(beta2) ;
 			delta = (sigma > 0) ? (beta / beta2) : (beta2 / beta) ;
-			gamma = cs_cmult(new double[] {sigma, 0},
-				cs_cdiv(cs_conj(alpha), new double[] {beta2 * beta, 0.0})) ;
-//			gamma = cs_cmult(alpha, cs_cdiv(sigma, )));  // TODO: double check
-			Lx.set(p, cs_cplus(
-				cs_cmult(new double[] {delta, 0.0}, Lx.get(p)),
-				((sigma > 0) ? (cs_cmult(gamma, w.get(j))) : cs_czero()))) ;
-//			Lx.set(p, cs_cmult(Lx.get(p), cs_cplus(delta, ((sigma > 0) ? (cs_cmult(gamma, w.get(j))) : cs_czero())));
+			gamma = cs_cmult(cs_cdiv(cs_conj(alpha), beta2*beta, 0.0), sigma) ;
+			Lx.set(p, cs_cplus(cs_cmult(Lx.get(p), delta), (sigma>0) ? cs_cmult(gamma, w.get(j)) : cs_czero()));
 			beta = beta2 ;
 			/* CXSparseJ */
-			phase = new double[] {cs_cabs(cs_cdiv(Lx.get(p), Lx.get(p))), 0.0} ;  /* phase = abs(L(j,j))/L(j,j) */
+			phase = cs_cabs(cs_cdiv(Lx.get(p), Lx.get(p))) ;  /* phase = abs(L(j,j))/L(j,j) */
 			Lx.set(p, cs_cmult(Lx.get(p), phase)) ;		/* L(j,j) = L(j,j) * phase */
 			for (p++; p < Lp [j + 1]; p++)
 			{
 				w1 = w.get(Li [p]) ;
 				w.set(Li [p], cs_cminus(w1, cs_cmult(alpha, Lx.get(p)))) ;
 				w2 = w.get(Li [p]) ;
-				Lx.set(p, cs_cmult(Lx.get(p), cs_cplus(delta, cs_cmult(gamma, ((sigma > 0) ? w1 : w2)))));
-//				Lx.set(p, cs_cmult(Lx.get(p), cs_cplus(delta, cs_cmult(gamma, ((sigma > 0) ? w1 : w2)))));
+				Lx.set(p, cs_cplus(cs_cmult(Lx.get(p), delta), cs_cmult(gamma, (sigma>0) ? w1 : w2))) ;
 				/* CXSparseJ */
 				Lx.set(p, cs_cmult(Lx.get(p), phase)) ;	/* L(i,j) = L(i,j) * phase */
 			}
 		}
+		w = null ;
 		return (beta2 > 0) ;
 	}
 

@@ -52,12 +52,14 @@ public class DZcs_common {
 		 */
 		public double[] x;
 
-		/**
-		 *
-		 */
 		public DZcsa()
 		{
 
+		}
+
+		public DZcsa(double [] x)
+		{
+			this.x = x ;
 		}
 
 		/**
