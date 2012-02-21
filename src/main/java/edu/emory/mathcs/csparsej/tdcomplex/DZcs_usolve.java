@@ -22,11 +22,15 @@
  *
  */
 
-package edu.emory.mathcs.csparsej.tdcomplex;
+package edu.emory.mathcs.csparsej.tdcomplex ;
 
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa ;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs ;
+
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.CS_CSC ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cdiv ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cminus ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cmult ;
 
 /**
  * Solve an upper triangular system Ux=b.
@@ -36,32 +40,32 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
  *
  */
 public class DZcs_usolve {
-    /**
-     * Solves an upper triangular system Ux=b, where x and b are dense vectors.
-     * The diagonal of U must be the last entry of each column.
-     *
-     * @param U
-     *            upper triangular matrix in column-compressed form
-     * @param x
-     *            size n, right hand side on input, solution on output
-     * @return true if successful, false on error
-     */
-    public static boolean cs_usolve(DZcs U, DZcsa x) {
-        int p, j, n, Up[], Ui[];
-        DZcsa Ux = new DZcsa();
-        if (!DZcs_util.CS_CSC(U) || x == null)
-            return (false); /* check inputs */
-        n = U.n;
-        Up = U.p;
-        Ui = U.i;
-        Ux.x = U.x;
-        for (j = n - 1; j >= 0; j--) {
-            x.set(j, DZcs_complex.cs_cdiv(x.get(j), Ux.get(Up[j + 1] - 1)));
-            for (p = Up[j]; p < Up[j + 1] - 1; p++) {
-                x.set(Ui[p], DZcs_complex.cs_cminus(x.get(Ui[p]), DZcs_complex.cs_cmult(Ux.get(p), x.get(j))));
-            }
-        }
-        return (true);
-    }
+
+	/**
+	 * Solves an upper triangular system Ux=b, where x and b are dense vectors.
+	 * The diagonal of U must be the last entry of each column.
+	 *
+	 * @param U
+	 *            upper triangular matrix in column-compressed form
+	 * @param x
+	 *            size n, right hand side on input, solution on output
+	 * @return true if successful, false on error
+	 */
+	public static boolean cs_usolve(DZcs U, DZcsa x)
+	{
+		int p, j, n, Up[], Ui[] ;
+		DZcsa Ux = new DZcsa() ;
+		if (!CS_CSC(U) || x == null) return (false) ;	/* check inputs */
+		n = U.n ; Up = U.p ; Ui = U.i ; Ux.x = U.x ;
+		for (j = n - 1 ; j >= 0 ; j--)
+		{
+			x.set(j, cs_cdiv(x.get(j), Ux.get(Up [j+1] - 1))) ;
+			for (p = Up [j] ; p < Up [j+1] - 1 ; p++)
+			{
+				x.set(Ui [p], cs_cminus(x.get(Ui [p]), cs_cmult(Ux.get(p), x.get(j)))) ;
+			}
+		}
+		return (true) ;
+	}
 
 }

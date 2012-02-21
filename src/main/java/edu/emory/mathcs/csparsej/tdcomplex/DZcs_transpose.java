@@ -22,10 +22,15 @@
  *
  */
 
-package edu.emory.mathcs.csparsej.tdcomplex;
+package edu.emory.mathcs.csparsej.tdcomplex ;
 
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa ;
+import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs ;
+
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.CS_CSC ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.cs_spalloc ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_conj ;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_cumsum.cs_cumsum ;
 
 /**
  * Transpose a sparse matrix.
@@ -36,42 +41,37 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
  */
 public class DZcs_transpose {
 
-    /**
-     * Computes the transpose of a sparse matrix, C =A';
-     *
-     * @param A
-     *            column-compressed matrix
-     * @param values
-     *            pattern only if false, both pattern and values otherwise
-     * @return C=A', null on error
-     */
-    public static DZcs cs_transpose(DZcs A, boolean values) {
-        int p, q, j, Cp[], Ci[], n, m, Ap[], Ai[], w[];
-        DZcsa Cx = new DZcsa(), Ax = new DZcsa();
-        DZcs C;
-        if (!DZcs_util.CS_CSC(A))
-            return (null); /* check inputs */
-        m = A.m;
-        n = A.n;
-        Ap = A.p;
-        Ai = A.i;
-        Ax.x = A.x;
-        C = DZcs_util.cs_spalloc(n, m, Ap[n], values && (Ax.x != null), false); /* allocate result */
-        w = new int[m]; /* get workspace */
-        Cp = C.p;
-        Ci = C.i;
-        Cx.x = C.x;
-        for (p = 0; p < Ap[n]; p++)
-            w[Ai[p]]++; /* row counts */
-        DZcs_cumsum.cs_cumsum(Cp, w, m); /* row pointers */
-        for (j = 0; j < n; j++) {
-            for (p = Ap[j]; p < Ap[j + 1]; p++) {
-                Ci[q = w[Ai[p]]++] = j; /* place A(i,j) as entry C(j,i) */
-                if (Cx.x != null)
-                    Cx.set(q, Ax.get(p));
-            }
-        }
-        return C;
-    }
+	/**
+	 * Computes the transpose of a sparse matrix, C =A';
+	 *
+	 * @param A
+	 *            column-compressed matrix
+	 * @param values
+	 *            pattern only if false, both pattern and values otherwise
+	 * @return C=A', null on error
+	 */
+	public static DZcs cs_transpose(DZcs A, boolean values)
+	{
+		int p, q, j, Cp[], Ci[], n, m, Ap[], Ai[], w[] ;
+		DZcsa Cx = new DZcsa(), Ax = new DZcsa() ;
+		DZcs C ;
+		if (!CS_CSC (A)) return (null) ;		/* check inputs */
+		m = A.m ; n = A.n ; Ap = A.p ; Ai = A.i ; Ax.x = A.x ;
+		C = cs_spalloc (n, m, Ap [n], values && (Ax.x != null), false) ;  /* allocate result */
+		w = new int [m] ;				/* get workspace */
+		Cp = C.p ; Ci = C.i ; Cx.x = C.x ;
+		for (p = 0 ; p < Ap [n] ; p++) w [Ai [p]]++ ;	/* row counts */
+		cs_cumsum (Cp, w, m) ;				/* row pointers */
+		for (j = 0 ; j < n ; j++)
+		{
+			for (p = Ap [j] ; p < Ap [j + 1] ; p++)
+			{
+				Ci [q = w [Ai [p]]++] = j ;	/* place A(i,j) as entry C(j,i) */
+				if (Cx.x != null)
+					Cx.set(q, (values) ? cs_conj(Ax.get(p)) : Ax.get(p)) ;
+			}
+		}
+		return (C) ;
+	}
 
 }
