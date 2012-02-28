@@ -22,9 +22,13 @@
  *
  */
 
-package edu.emory.mathcs.csparsej.tdcomplex.demo ;
+package edu.emory.mathcs.csparsej.tdcomplex.test ;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Random ;
+
+import junit.framework.TestCase;
 
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_add.cs_add ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_chol.cs_chol ;
@@ -70,14 +74,56 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcss ;
  * @author Richard Lincoln (r.w.lincoln@gmail.com)
  *
  */
-public class DZcs_demo {
+abstract public class DZcs_test extends TestCase {
+
+	protected static final double DELTA = 1e-5;
+
+	protected static final String C_IBM32A = "c_ibm32a";
+	protected static final String C_IBM32B = "c_ibm32b";
+	protected static final String C_MBEACXC = "c_mbeacxc";
+	protected static final String C_WEST0067 = "c_west0067";
+	protected static final String C4 = "c4";
+	protected static final String CZERO = "czero";
+	protected static final String MHD1280B = "mhd1280b";
+	protected static final String NEUMANN = "neumann";
+	protected static final String QC324 = "qc324";
+	protected static final String T2 = "t2";
+	protected static final String T3 = "t3";
+	protected static final String YOUNG1C = "young1c";
+
+	protected static final String DIR = "matrix";
+
+	protected static InputStream getStream(String name) {
+		try
+		{
+			return DZcs_test1.class.getResource(DIR + "/" + name).openStream() ;
+		}
+		catch (IOException e)
+		{
+			return (null) ;
+		}
+	}
+
+	protected static void assertDimensions(DZcs A, int rows, int cols, int nzmax, int nnz, double norm1) {
+		assertDimensions(A, rows, cols, nzmax, nnz);
+		assertEquals(norm1, cs_norm (A), DELTA);
+	}
+
+	protected static void assertDimensions(DZcs A, int rows, int cols, int nzmax, int nnz) {
+		assertEquals(rows, A.m);
+		assertEquals(cols, A.n);
+		assertEquals(nzmax, A.nzmax);
+
+		int nz = (A.nz < 0) ? A.p [A.n] : A.nz ;
+		assertEquals(nnz, nz);
+	}
 
 	/**
 	 *
 	 * A structure for a demo problem.
 	 *
 	 */
-	public static class DZproblem {
+	protected static class DZproblem {
 
 		public DZcs A ;
 		public DZcs C ;
@@ -218,13 +264,13 @@ public class DZcs_demo {
 	 *            drop tolerance
 	 * @return problem
 	 */
-	public static DZproblem get_problem(String fileName, double tol)
+	protected static DZproblem get_problem(InputStream in, double tol)
 	{
 		DZcs T, A, C ;
 		int sym, m, n, mn, nz1, nz2 ;
 		DZproblem Prob ;
 		Prob = new DZproblem() ;
-		T = cs_load (fileName) ;			/* load triplet matrix T from a file */
+		T = cs_load (in) ;				/* load triplet matrix T from a file */
 		Prob.A = A = cs_compress (T) ;			/* A = compressed-column form of T */
 		T = null ;					/* clear T */
 		if (!cs_dupl (A)) return (null) ;		/* sum up duplicates */
@@ -255,7 +301,7 @@ public class DZcs_demo {
 	 *            problem
 	 * @return true if successful, false on error
 	 */
-	public static boolean demo2(DZproblem Prob)
+	protected static boolean demo2(DZproblem Prob)
 	{
 		DZcs A, C ;
 		DZcsa b, x, resid ;
@@ -325,7 +371,7 @@ public class DZcs_demo {
 	 *            problem
 	 * @return true if successful, false on error
 	 */
-	public static boolean demo3(DZproblem Prob)
+	protected static boolean demo3(DZproblem Prob)
 	{
 		DZcs A, C, W = null, WW, WT, E = null, W2 ;
 		int n, k, Li[], Lp[], Wi[], Wp[], p1, p2, p[] = null ;

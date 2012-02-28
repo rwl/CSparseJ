@@ -22,9 +22,9 @@
  *
  */
 
-package edu.emory.mathcs.csparsej.tdcomplex.demo ;
+package edu.emory.mathcs.csparsej.tdcomplex.test ;
 
-import edu.emory.mathcs.csparsej.tdcomplex.demo.DZcs_demo.DZproblem ;
+import edu.emory.mathcs.csparsej.tdcomplex.test.DZcs_test.DZproblem;
 
 /**
  * Read a matrix, solve a linear system, update/downdate.
@@ -33,7 +33,7 @@ import edu.emory.mathcs.csparsej.tdcomplex.demo.DZcs_demo.DZproblem ;
  * @author Richard Lincoln (r.w.lincoln@gmail.com)
  *
  */
-public class DZcs_demo3 {
+public class DZcs_test3 extends DZcs_test {
 
 	public static void main(String[] args)
 	{
@@ -42,8 +42,8 @@ public class DZcs_demo3 {
 		{
 			throw new IllegalArgumentException("Usage: java edu.emory.mathcs.csparsej.tdcomplex.demo.DZcs_demo3 fileName") ;
 		}
-		Prob = DZcs_demo.get_problem (args[0], 1e-14) ;
-		DZcs_demo.demo3 (Prob) ;
+//		Prob = get_problem (args[0], 1e-14) ;
+//		demo3 (Prob) ;
 	}
 
 }

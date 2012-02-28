@@ -25,9 +25,10 @@
 package edu.emory.mathcs.csparsej.tdcomplex ;
 
 import java.io.BufferedReader ;
-import java.io.FileNotFoundException ;
-import java.io.FileReader ;
 import java.io.IOException ;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs ;
 
@@ -53,25 +54,20 @@ public class DZcs_load {
 	 *            file name
 	 * @return T if successful, null on error
 	 */
-	public static DZcs cs_load(String fileName)
+	public static DZcs cs_load(InputStream in)
 	{
 		int i, j;
 		double x[], x_re, x_im ;
 		DZcs T;
 		String line, tokens[] ;
-		BufferedReader in;
-		try
-		{
-			in = new BufferedReader(new FileReader(fileName));
-		}
-		catch (FileNotFoundException e1)
-		{
-			return (null);
-		}
+		Reader r = new InputStreamReader(in);
+		BufferedReader br = new BufferedReader(r);
+
 		T = cs_spalloc(0, 0, 1, true, true) ;	/* allocate result */
+
 		try
 		{
-			while ((line = in.readLine()) != null)
+			while ((line = br.readLine()) != null)
 			{
 				tokens = line.trim().split("\\s+") ;
 				if (tokens.length != 4) return null ;
@@ -82,6 +78,8 @@ public class DZcs_load {
 				x = new double[] {x_re, x_im} ;
 				if (!cs_entry(T, i, j, x)) return (null) ;
 			}
+			r.close();
+			br.close();
 		}
 		catch (IOException e)
 		{
