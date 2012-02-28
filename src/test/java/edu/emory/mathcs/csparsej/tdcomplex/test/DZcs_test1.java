@@ -87,19 +87,19 @@ public class DZcs_test1 extends DZcs_test {
 	public void test_demo1_c_ibm32a() {
 		DZcs T, A, AT, D ;
 
-		InputStream in = getStream(C_IBM32A) ;
+		InputStream in = get_stream(C_IBM32A) ;
 
 		T = demo1_load (in) ;
-		assertDimensions(T, 32, 31, 128, 123);
+		assert_dimensions(T, 32, 31, 128, 123);
 
 		A = demo1_compress(T) ;
-		assertDimensions(A, 32, 31, 123, 123, 9.89949) ;
+		assert_dimensions(A, 32, 31, 123, 123, 9.89949) ;
 
 		AT = demo1_transpose(A) ;
-		assertDimensions(AT, 31, 32, 123, 123, 11.3137) ;
+		assert_dimensions(AT, 31, 32, 123, 123, 11.3137) ;
 
 		D = demo1_multiply_add(A, AT) ;
-		assertDimensions(D, 32, 32, 386, 386, 140) ;
+		assert_dimensions(D, 32, 32, 386, 386, 140) ;
 	}
 
 }

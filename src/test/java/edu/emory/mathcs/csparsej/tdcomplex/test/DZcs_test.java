@@ -26,15 +26,15 @@ package edu.emory.mathcs.csparsej.tdcomplex.test ;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random ;
 
 import junit.framework.TestCase;
 
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_add.cs_add ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_chol.cs_chol ;
-import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_cholsol.cs_cholsol ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_compress.cs_compress ;
-import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_dmperm.cs_dmperm ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_droptol.cs_droptol ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_dropzeros.cs_dropzeros ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_dupl.cs_dupl ;
@@ -45,13 +45,11 @@ import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_ipvec.cs_ipvec ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_load.cs_load ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_lsolve.cs_lsolve ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_ltsolve.cs_ltsolve ;
-import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_lusol.cs_lusol ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_multiply.cs_multiply ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_norm.cs_norm ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_permute.cs_permute ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_pinv.cs_pinv ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_pvec.cs_pvec ;
-import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_qrsol.cs_qrsol ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_schol.cs_schol ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_transpose.cs_transpose ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_updown.cs_updown ;
@@ -63,7 +61,6 @@ import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cmult ;
 
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs ;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa ;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsd ;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsn ;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcss ;
 
@@ -77,6 +74,7 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcss ;
 abstract public class DZcs_test extends TestCase {
 
 	protected static final double DELTA = 1e-5;
+	protected static final double DROP_TOL = 1e-14;
 
 	protected static final String C_IBM32A = "c_ibm32a";
 	protected static final String C_IBM32B = "c_ibm32b";
@@ -93,7 +91,7 @@ abstract public class DZcs_test extends TestCase {
 
 	protected static final String DIR = "matrix";
 
-	protected static InputStream getStream(String name) {
+	protected static InputStream get_stream(String name) {
 		try
 		{
 			return DZcs_test1.class.getResource(DIR + "/" + name).openStream() ;
@@ -104,14 +102,14 @@ abstract public class DZcs_test extends TestCase {
 		}
 	}
 
-	protected static void assertDimensions(DZcs A, int rows, int cols, int nzmax, int nnz, double norm1) {
-		assertDimensions(A, rows, cols, nzmax, nnz);
+	protected static void assert_dimensions(DZcs A, int m, int n, int nzmax, int nnz, double norm1) {
+		assert_dimensions(A, m, n, nzmax, nnz);
 		assertEquals(norm1, cs_norm (A), DELTA);
 	}
 
-	protected static void assertDimensions(DZcs A, int rows, int cols, int nzmax, int nnz) {
-		assertEquals(rows, A.m);
-		assertEquals(cols, A.n);
+	protected static void assert_dimensions(DZcs A, int m, int n, int nzmax, int nnz) {
+		assertEquals(m, A.m);
+		assertEquals(n, A.n);
 		assertEquals(nzmax, A.nzmax);
 
 		int nz = (A.nz < 0) ? A.p [A.n] : A.nz ;
@@ -132,17 +130,20 @@ abstract public class DZcs_test extends TestCase {
 		public DZcsa b ;
 		public DZcsa resid ;
 
-		public DZproblem()
-		{
+		public List<Double> residuals = new ArrayList<Double>();
 
-		}
+		public int nb ;
+		public int ns ;
+		public int sprank ;
+
+		public DZproblem () {}
 
 	};
 
 	/**
 	 * 1 if A is square & upper tri., -1 if square & lower tri., 0 otherwise
 	 */
-	private static int is_sym(DZcs A)
+	protected static int is_sym(DZcs A)
 	{
 		int j, p, n = A.n, m = A.m, Ap[] = A.p, Ai[] = A.i ;
 		boolean is_upper, is_lower ;
@@ -163,7 +164,7 @@ abstract public class DZcs_test extends TestCase {
 	/**
 	 * true for off-diagonal entries
 	 */
-	private static class Dropdiag implements DZcs_ifkeep {
+	protected static class Dropdiag implements DZcs_ifkeep {
 
 		public boolean fkeep(int i, int j, double [] aij, Object other)
 		{
@@ -175,7 +176,7 @@ abstract public class DZcs_test extends TestCase {
 	/**
 	 * C = A + triu(A,1)'
 	 */
-	private static DZcs make_sym(DZcs A)
+	protected static DZcs make_sym(DZcs A)
 	{
 		DZcs AT, C ;
 		AT = cs_transpose (A, true) ; 			/* AT = A' */
@@ -188,7 +189,7 @@ abstract public class DZcs_test extends TestCase {
 	/**
 	 * create a right-hand side
 	 */
-	private static void rhs(DZcsa x, DZcsa b, int m)
+	protected static void rhs(DZcsa x, DZcsa b, int m)
 	{
 		int i;
 		for (i = 0; i < m; i++) b.set(i, new double[] {1 + ((double) i) / m, 0.0}) ;
@@ -198,7 +199,7 @@ abstract public class DZcs_test extends TestCase {
 	/**
 	 * infinity-norm of x
 	 */
-	private static double norm(DZcsa x, int n)
+	protected static double norm(DZcsa x, int n)
 	{
 		int i ;
 		double normx = 0 ;
@@ -209,7 +210,7 @@ abstract public class DZcs_test extends TestCase {
 	/**
 	 * compute residual, norm(A*x-b,inf) / (norm(A,1)*norm(x,inf) + norm(b,inf))
 	 */
-	private static void print_resid(boolean ok, DZcs A, DZcsa x, DZcsa b, DZcsa resid)
+	protected static void print_resid(boolean ok, DZcs A, DZcsa x, DZcsa b, DZcsa resid, DZproblem prob)
 	{
 		int i, m, n ;
 		if (!ok)
@@ -221,22 +222,25 @@ abstract public class DZcs_test extends TestCase {
 		for (i = 0 ; i < m ; i++)
 			resid.set(i, cs_cneg(b.get(i))) ;	/* resid = -b */
 		cs_gaxpy (A, x, resid) ;			/* resid = resid + A*x  */
-		System.out.printf("resid: %8.2e\n",
-			norm (resid, m) / ((n == 0) ? 1 : (cs_norm (A) * norm (x, n) + norm (b, m)))) ;
+
+		double r = norm (resid, m) / ((n == 0) ? 1 : (cs_norm (A) * norm (x, n) + norm (b, m))) ;
+		prob.residuals.add(r) ;
+
+		System.out.printf("resid: %8.2e\n", r) ;
 	}
 
-	private static double tic()
+	protected static double tic()
 	{
 		return System.nanoTime();
 	}
 
-	private static double toc(double t)
+	protected static double toc(double t)
 	{
 		double s = tic() ;
 		return (Math.max(0, s - t)) / 1000000.0 ;
 	}
 
-	private static void print_order(int order)
+	protected static void print_order(int order)
 	{
 		switch (order)
 		{
@@ -268,100 +272,45 @@ abstract public class DZcs_test extends TestCase {
 	{
 		DZcs T, A, C ;
 		int sym, m, n, mn, nz1, nz2 ;
-		DZproblem Prob ;
-		Prob = new DZproblem() ;
+		DZproblem prob ;
+		prob = new DZproblem() ;
 		T = cs_load (in) ;				/* load triplet matrix T from a file */
-		Prob.A = A = cs_compress (T) ;			/* A = compressed-column form of T */
+		prob.A = A = cs_compress (T) ;			/* A = compressed-column form of T */
 		T = null ;					/* clear T */
 		if (!cs_dupl (A)) return (null) ;		/* sum up duplicates */
-		Prob.sym = sym = is_sym (A) ;			/* determine if A is symmetric */
+		prob.sym = sym = is_sym (A) ;			/* determine if A is symmetric */
 		m = A.m ; n = A.n ;
 		mn = Math.max (m, n) ;
 		nz1 = A.p [n] ;
 		cs_dropzeros (A) ;				/* drop zero entries */
 		nz2 = A.p [n] ;
 		if (tol > 0) cs_droptol (A, tol) ;		/* drop tiny entries (just to test) */
-		Prob.C = C = sym != 0 ? make_sym(A) : A ;	/* C = A + triu(A,1)', or C=A */
+		prob.C = C = sym != 0 ? make_sym(A) : A ;	/* C = A + triu(A,1)', or C=A */
 		if (C == null) return (null) ;
 		System.out.printf("\n--- Matrix: %d-by-%d, nnz: %d (sym: %d: nnz %d), norm: %8.2e\n",
 			m, n, A.p [n], sym, sym != 0 ? C.p [n] : 0, cs_norm (C)) ;
 		if (nz1 != nz2) System.out.printf("zero entries dropped: %d\n", nz1 - nz2) ;
 		if (nz2 != A.p [n]) System.out.printf("tiny entries dropped: %d\n", nz2 - A.p [n]) ;
-		Prob.b = new DZcsa (mn) ;
-		Prob.x = new DZcsa (mn) ;
-		Prob.resid = new DZcsa (mn) ;
-		return Prob ;
+		prob.b = new DZcsa (mn) ;
+		prob.x = new DZcsa (mn) ;
+		prob.resid = new DZcsa (mn) ;
+		return prob ;
 	}
 
-	/**
-	 * Solves a linear system using Cholesky, LU, and QR, with various
-	 * orderings.
-	 *
-	 * @param Prob
-	 *            problem
-	 * @return true if successful, false on error
-	 */
-	protected static boolean demo2(DZproblem Prob)
-	{
-		DZcs A, C ;
-		DZcsa b, x, resid ;
-		double t, tol ;
-		int k, m, n, order, nb, ns, r[], s[], rr[], sprank ;
-		boolean ok ;
-		DZcsd D ;
-		if (Prob == null) return (false) ;
-		A = Prob.A ; C = Prob.C ; b = Prob.b ; x = Prob.x ; resid = Prob.resid ;
-		m = A.m ; n = A.n ;
-		tol = Prob.sym != 0 ? 0.001 : 1 ;	/* partial pivoting tolerance */
-		D = cs_dmperm (C, 1) ;			/* randomized dmperm analysis */
-		if (D == null) return (false) ;
-		nb = D.nb ; r = D.r ; s = D.s ; rr = D.rr ;
-		sprank = rr [3] ;
-		for (ns = 0, k = 0 ; k < nb ; k++)
-		{
-			if ((r [k+1] == r [k] + 1) && (s [k+1] == s [k] + 1))
-			{
-				ns++ ;
-			}
-		}
-		System.out.printf("blocks: %d singletons: %d structural rank: %d\n", nb, ns, sprank) ;
-		D = null ;
-		for (order = 0 ; order <= 3 ; order += 3)	/* natural and amd(A'*A) */
-		{
-			if (order == 0 && m > 1000) continue ;
-			System.out.print("QR   ") ;
-			print_order (order) ;
-			rhs (x, b, m) ;				/* compute right-hand side */
-			t = tic() ;
-			ok = cs_qrsol (order, C, x) ;		/* min norm(Ax-b) with QR */
-			System.out.printf("time: %8.2f ms ", toc (t)) ;
-			print_resid (ok, C, x, b, resid) ;	/* print residual */
-		}
-		if (m != n || sprank < n) return (true) ;	/* return if rect. or singular*/
-		for (order = 0 ; order <= 3 ; order++)		/* try all orderings */
-		{
-			if (order == 0 && m > 1000) continue ;
-			System.out.print("LU   ") ;
-			print_order (order) ;
-			rhs (x, b, m) ;				/* compute right-hand side */
-			t = tic() ;
-			ok = cs_lusol (order, C, x, tol) ;	/* solve Ax=b with LU */
-			System.out.printf("time: %8.2f ms ", toc (t)) ;
-			print_resid (ok, C, x, b, resid) ;	/* print residual */
-		}
-		if (Prob.sym == 0) return (true) ;
-		for (order = 0 ; order <= 1 ; order++)		/* natural and amd(A+A') */
-		{
-			if (order == 0 && m > 1000) continue ;
-			System.out.print("Chol ") ;
-			print_order (order) ;
-			rhs (x, b, m) ;				/* compute right-hand side */
-			t = tic() ;
-			ok = cs_cholsol (order, C, x) ;		/* solve Ax=b with Cholesky */
-			System.out.printf("time: %8.2f ms ", toc (t)) ;
-			print_resid (ok, C, x, b, resid) ;	/* print residual */
-		}
-		return (true) ;
+	protected static void assert_problem(DZproblem prob, int m, int n, int nnz, int sym, int sym_nnz,
+			double norm) {
+		assertEquals(m, prob.A.m) ;
+		assertEquals(n, prob.A.n) ;
+		assertEquals(nnz, prob.A.p [n]) ;
+		assertEquals(sym, prob.sym) ;
+		assertEquals(sym_nnz, sym != 0 ? prob.C.p [n] : 0) ;
+		assertEquals(norm, cs_norm (prob.C), 1e-2) ;
+	}
+
+	protected static void assert_structure(DZproblem prob, int blocks, int singletons, int rank) {
+		assertEquals(blocks, prob.nb) ;
+		assertEquals(singletons, prob.ns) ;
+		assertEquals(rank, prob.sprank) ;
 	}
 
 	/**
@@ -403,7 +352,7 @@ abstract public class DZcs_test extends TestCase {
 		cs_pvec (S.pinv, y, x, n) ;				/* x = P'*y */
 		System.out.printf("solve    chol time %8.2f ms\n", toc (t)) ;
 		System.out.printf("original: ") ;
-		print_resid (true, C, x, b, resid) ;			/* print residual */
+		print_resid (true, C, x, b, resid, Prob) ;			/* print residual */
 		k = n / 2 ;						/* construct W  */
 		W = cs_spalloc (n, 1, n, true, false) ;
 		Lp = N.L.p ; Li = N.L.i ; Lx = new DZcsa(N.L.x) ;
@@ -440,7 +389,7 @@ abstract public class DZcs_test extends TestCase {
 		WW = null ;
 		if (E == null || p == null) return (false) ;
 		System.out.printf("update:   time: %8.2f ms(incl solve) ", t1 + t) ;
-		print_resid (true, E, x, b, resid) ;			/* print residual */
+		print_resid (true, E, x, b, resid, Prob) ;		/* print residual */
 		N = null ;						/* clear N */
 		t = tic() ;
 		N = cs_chol (E, S) ;					/* numeric Cholesky */
@@ -451,7 +400,7 @@ abstract public class DZcs_test extends TestCase {
 		cs_pvec (S.pinv, y, x, n) ;				/* x = P'*y */
 		t = toc (t) ;
 		System.out.printf("rechol:   time: %8.2f ms(incl solve) ", t) ;
-		print_resid (true, E, x, b, resid) ;			/* print residual */
+		print_resid (true, E, x, b, resid, Prob) ;		/* print residual */
 		t = tic() ;
 		ok = cs_updown (N.L, -1, W, S.parent) ;			/* downdate: L*L'-W*W' */
 		t1 = toc (t) ;
@@ -464,7 +413,7 @@ abstract public class DZcs_test extends TestCase {
 		cs_pvec (S.pinv, y, x, n) ;				/* x = P'*y */
 		t = toc (t) ;
 		System.out.printf("downdate: time: %8.2f ms(incl solve) ", t1 + t) ;
-		print_resid (true, C, x, b, resid) ;			/* print residual */
+		print_resid (true, C, x, b, resid, Prob) ;		/* print residual */
 		return (true) ;
 	}
 

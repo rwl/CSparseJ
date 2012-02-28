@@ -42,7 +42,7 @@ public class DZcs_droptol {
 
 		public boolean fkeep(int i, int j, double [] aij, Object other)
 		{
-			return (cs_cabs (aij) > (cs_cabs ((double []) other))) ;
+			return (cs_cabs (aij) > (Double) other) ;
 		}
 	}
 
