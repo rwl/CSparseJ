@@ -93,7 +93,7 @@ public class DZcs_util {
 		if (A.x != null)
 		{
 			double [] Axnew = new double [2*nzmax] ;
-			length = Math.min (nzmax, A.x.length) ;
+			length = Math.min (2*nzmax, A.x.length) ;
 			System.arraycopy (A.x, 0, Axnew, 0, length) ;
 			A.x = Axnew ;
 		}

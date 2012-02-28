@@ -129,13 +129,13 @@ public class DZcs_dmperm {
 	}
 
 	/**
-	 * Compute coarse and then fine Dulmage-Mendelsohn decompositionm. seed
+	 * Compute coarse and then fine Dulmage-Mendelsohn decomposition. seed
 	 * optionally selects a randomized algorithm.
 	 *
 	 * @param A
 	 *            column-compressed matrix
 	 * @param seed
-	 *            0: natural, -1: reverse, random order oterwise
+	 *            0: natural, -1: reverse, random order otherwise
 	 * @return Dulmage-Mendelsohn analysis, null on error
 	 */
 	public static DZcsd cs_dmperm(DZcs A, int seed) {

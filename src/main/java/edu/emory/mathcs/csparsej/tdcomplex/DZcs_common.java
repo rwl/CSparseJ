@@ -77,7 +77,7 @@ public class DZcs_common {
 		 */
 		public double [] get(int idx)
 		{
-			return new double [] {x [idx], x [idx + 1]} ;
+			return new double [] {x [2 * idx], x [(2 * idx) + 1]} ;
 		}
 
 		/**
@@ -87,8 +87,8 @@ public class DZcs_common {
 		 */
 		public void set(int idx, double [] val)
 		{
-			x [idx] = val [0] ;
-			x [idx+1] = val [1] ;
+			x [(2 * idx)] = val [0] ;
+			x [(2 * idx) + 1] = val [1] ;
 		}
 	}
 
@@ -142,13 +142,13 @@ public class DZcs_common {
 
 		public double [] get(int idx)
 		{
-			return new double [] {x [idx], x [idx+1]} ;
+			return new double [] {x [2 * idx], x [(2 * idx) + 1]} ;
 		}
 
 		public void set(int idx, double [] val)
 		{
-			x [idx] = val [0] ;
-			x [idx+1] = val [1] ;
+			x [(2 * idx)] = val [0] ;
+			x [(2 * idx) + 1] = val [1] ;
 		}
 
 	};
