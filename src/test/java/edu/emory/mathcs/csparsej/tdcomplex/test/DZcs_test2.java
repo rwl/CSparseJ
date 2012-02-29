@@ -130,4 +130,209 @@ public class DZcs_test2 extends DZcs_test {
 		assertEquals(1.92e-03, prob.residuals.get(1), DELTA) ;
 	}
 
+	public void test_c_ibm32b()
+	{
+		InputStream in = get_stream (C_IBM32B) ;
+		DZproblem prob = get_problem (in, DROP_TOL) ;
+
+		test2(prob) ;
+
+		assert_problem(prob, 31, 32, 123, 0, 0, 1.13e+01) ;
+		assert_structure(prob, 1, 0, 31) ;
+
+		assertEquals(1.22e-16, prob.residuals.get(0), DELTA) ;
+		assertEquals(9.45e-17, prob.residuals.get(1), DELTA) ;
+	}
+
+	public void test_c_mbeacxc()
+	{
+		InputStream in = get_stream (C_MBEACXC) ;
+		DZproblem prob = get_problem (in, DROP_TOL) ;
+
+		test2(prob) ;
+
+		assert_problem(prob, 492, 490, 49920, 0, 0, 9.29e-01) ;
+		assert_structure(prob, 10, 8, 448) ;
+
+		assertNull(prob.residuals.get(0)) ;
+		assertNull(prob.residuals.get(1)) ;
+	}
+
+	public void test_c_west0067()
+	{
+		InputStream in = get_stream (C_WEST0067) ;
+		DZproblem prob = get_problem (in, DROP_TOL) ;
+
+		test2(prob) ;
+
+		assert_problem(prob, 67, 67, 294, 0, 0, 6.17) ;
+		assert_structure(prob, 2, 1, 67) ;
+
+		assertEquals(8.16e-17, prob.residuals.get(0), DELTA) ;
+		assertEquals(5.34e-17, prob.residuals.get(1), DELTA) ;
+		assertEquals(4.54e-17, prob.residuals.get(2), DELTA) ;
+		assertEquals(5.90e-17, prob.residuals.get(3), DELTA) ;
+		assertEquals(5.28e-17, prob.residuals.get(4), DELTA) ;
+		assertEquals(4.76e-17, prob.residuals.get(5), DELTA) ;
+	}
+
+	public void test_c4()
+	{
+		InputStream in = get_stream (C4) ;
+		DZproblem prob = get_problem (in, DROP_TOL) ;
+
+		test2(prob) ;
+
+		assert_problem(prob, 4, 4, 10, -1, 16, 7.37e+01) ;
+		assert_structure(prob, 1, 0, 4) ;
+
+		assertEquals(5.85e-17, prob.residuals.get(0), DELTA) ;
+		assertEquals(5.85e-17, prob.residuals.get(1), DELTA) ;
+
+		assertEquals(2.29e-17, prob.residuals.get(2), DELTA) ;
+		assertEquals(2.29e-17, prob.residuals.get(3), DELTA) ;
+		assertEquals(2.29e-17, prob.residuals.get(4), DELTA) ;
+		assertEquals(2.29e-17, prob.residuals.get(5), DELTA) ;
+
+		assertEquals(6.88e-17, prob.residuals.get(6), DELTA) ;
+		assertEquals(6.88e-17, prob.residuals.get(7), DELTA) ;
+	}
+
+	public void test_czero()
+	{
+		InputStream in = get_stream (CZERO) ;
+		DZproblem prob = get_problem (in, DROP_TOL) ;
+
+		test2(prob) ;
+
+		assert_problem(prob, 1, 1, 0, 1, 0, 0.0) ;
+		assert_dropped(prob, 1, 0) ;
+		assert_structure(prob, 2, 0, 0) ;
+
+		assertNull(prob.residuals.get(0)) ;
+		assertNull(prob.residuals.get(1)) ;
+	}
+
+	public void test_mhd1280b()
+	{
+		InputStream in = get_stream (MHD1280B) ;
+		DZproblem prob = get_problem (in, DROP_TOL) ;
+
+		test2(prob) ;
+
+		assert_problem(prob, 1280, 1280, 11963, -1, 22646, 8.00e+01) ;
+		assert_dropped(prob, 0, 66) ;
+		assert_structure(prob, 20, 14, 1280) ;
+
+		assertEquals(6.15e-25, prob.residuals.get(0), DELTA) ;
+		assertEquals(2.33e-25, prob.residuals.get(1), DELTA) ;
+		assertEquals(3.96e-25, prob.residuals.get(2), DELTA) ;
+		assertEquals(3.96e-25, prob.residuals.get(3), DELTA) ;
+		assertEquals(1.58e-25, prob.residuals.get(4), DELTA) ;
+	}
+
+	public void test_neumann()
+	{
+		InputStream in = get_stream (NEUMANN) ;
+		DZproblem prob = get_problem (in, DROP_TOL) ;
+
+		test2(prob) ;
+
+		assert_problem(prob, 1600, 1600, 7840, 0, 0, 1.41e+01) ;
+		assert_structure(prob, 1, 0, 1600) ;
+
+		assertEquals(1.04e-15, prob.residuals.get(0), DELTA) ;
+		assertEquals(3.55e-16, prob.residuals.get(1), DELTA) ;
+		assertEquals(4.03e-16, prob.residuals.get(2), DELTA) ;
+		assertEquals(4.03e-16, prob.residuals.get(3), DELTA) ;
+	}
+
+	public void test_qc324()
+	{
+		InputStream in = get_stream (QC324) ;
+		DZproblem prob = get_problem (in, DROP_TOL) ;
+
+		test2(prob) ;
+
+		assert_problem(prob, 324, 324, 26730, 0, 0, 1.71) ;
+		assert_structure(prob, 1, 0, 324) ;
+
+		assertEquals(9.42e-17, prob.residuals.get(0), DELTA) ;
+		assertEquals(8.94e-17, prob.residuals.get(1), DELTA) ;
+		assertEquals(6.01e-17, prob.residuals.get(2), DELTA) ;
+		assertEquals(4.05e-17, prob.residuals.get(3), DELTA) ;
+		assertEquals(4.71e-17, prob.residuals.get(4), DELTA) ;
+		assertEquals(4.71e-17, prob.residuals.get(5), DELTA) ;
+	}
+
+	public void test_t2()
+	{
+		InputStream in = get_stream (T2) ;
+		DZproblem prob = get_problem (in, DROP_TOL) ;
+
+		test2(prob) ;
+
+		assert_problem(prob, 4, 4, 10, 0, 0, 1.06e+02) ;
+		assert_structure(prob, 1, 0, 4) ;
+
+		assertEquals(2.06e-17, prob.residuals.get(0), DELTA) ;
+		assertEquals(6.36e-18, prob.residuals.get(1), DELTA) ;
+		assertEquals(4.88e-18, prob.residuals.get(2), DELTA) ;
+		assertEquals(2.11e-18, prob.residuals.get(3), DELTA) ;
+		assertEquals(6.36e-18, prob.residuals.get(4), DELTA) ;
+		assertEquals(2.11e-18, prob.residuals.get(5), DELTA) ;
+	}
+
+	public void test_t3()
+	{
+		InputStream in = get_stream (T3) ;
+		DZproblem prob = get_problem (in, DROP_TOL) ;
+
+		test2(prob) ;
+
+		assert_problem(prob, 3, 4, 12, 0, 0, 3.06) ;
+		assert_structure(prob, 1, 0, 3) ;
+
+		assertEquals(1.05e-16, prob.residuals.get(0), DELTA) ;
+		assertEquals(1.05e-16, prob.residuals.get(1), DELTA) ;
+	}
+
+	public void test_t4()
+	{
+		InputStream in = get_stream (T4) ;
+		DZproblem prob = get_problem (in, DROP_TOL) ;
+
+		test2(prob) ;
+
+		assert_problem(prob, 2, 2, 3, 1, 4, 2.83) ;
+		assert_structure(prob, 1, 0, 2) ;
+
+		assertEquals(5.65e-17, prob.residuals.get(0), DELTA) ;
+		assertEquals(5.65e-17, prob.residuals.get(1), DELTA) ;
+		assertEquals(0.0, prob.residuals.get(2), DELTA) ;
+		assertEquals(0.0, prob.residuals.get(3), DELTA) ;
+		assertEquals(0.0, prob.residuals.get(4), DELTA) ;
+		assertEquals(0.0, prob.residuals.get(5), DELTA) ;
+		assertNull(prob.residuals.get(6)) ;
+		assertNull(prob.residuals.get(7)) ;
+	}
+
+	public void test_young1c()
+	{
+		InputStream in = get_stream (YOUNG1C) ;
+		DZproblem prob = get_problem (in, DROP_TOL) ;
+
+		test2(prob) ;
+
+		assert_problem(prob, 841, 841, 4089, 0, 0, 7.30e+02) ;
+		assert_structure(prob, 1, 0, 841) ;
+
+		assertEquals(1.81e-16, prob.residuals.get(0), DELTA) ;
+		assertEquals(1.57e-16, prob.residuals.get(1), DELTA) ;
+		assertEquals(1.39e-16, prob.residuals.get(2), DELTA) ;
+		assertEquals(2.95e-16, prob.residuals.get(3), DELTA) ;
+		assertEquals(3.37e-16, prob.residuals.get(4), DELTA) ;
+		assertEquals(3.37e-16, prob.residuals.get(5), DELTA) ;
+	}
+
 }
