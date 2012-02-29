@@ -73,20 +73,34 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcss ;
  */
 abstract public class DZcs_test extends TestCase {
 
-	protected static final double DELTA = 1e-5;
+	protected static final double DELTA = 1e-4;
 	protected static final double DROP_TOL = 1e-14;
 
-	protected static final String C_IBM32A = "c_ibm32a";
-	protected static final String C_IBM32B = "c_ibm32b";
+	/**
+	 * US economy, 1972.  Dan Szyld, while at NYU.
+	 * Numerically and structurally singular
+	 */
 	protected static final String C_MBEACXC = "c_mbeacxc";
+
+	/** Cavett problem with 5 components (chemical eng., Westerberg) */
 	protected static final String C_WEST0067 = "c_west0067";
-	protected static final String C4 = "c4";
-	protected static final String CZERO = "czero";
+
+	/** Alfven spectra in magnetohydrodynamics */
 	protected static final String MHD1280B = "mhd1280b";
-	protected static final String NEUMANN = "neumann";
+
+	/** Model of H+ in an electromagnetic field */
 	protected static final String QC324 = "qc324";
+
+	protected static final String CZERO = "czero";
+	protected static final String C4 = "c4";
 	protected static final String T2 = "t2";
 	protected static final String T3 = "t3";
+	protected static final String T4 = "t4";
+	protected static final String NEUMANN = "neumann";
+	protected static final String C_IBM32A = "c_ibm32a";
+	protected static final String C_IBM32B = "c_ibm32b";
+
+	/** Aeronautical problem */
 	protected static final String YOUNG1C = "young1c";
 
 	protected static final String DIR = "matrix";
