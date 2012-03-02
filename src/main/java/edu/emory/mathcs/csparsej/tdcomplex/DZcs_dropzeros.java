@@ -43,7 +43,7 @@ public class DZcs_dropzeros {
 
 		public boolean fkeep(int i, int j, double[] aij, Object other)
 		{
-			return (cs_creal(aij) != 0 && cs_cimag(aij) != 0) ;
+			return ((cs_creal(aij) != 0) || (cs_cimag(aij) != 0)) ;
 		}
 	}
 

@@ -66,7 +66,7 @@ public class DZcs_happly {
 		Vp = V.p ; Vi = V.i ; Vx.x = V.x ;
 		for (p = Vp [i] ; p < Vp [i+1] ; p++)		/* tau = v'*x */
 		{
-		    tau = cs_cplus(tau, cs_conj(cs_cmult(Vx.get(p), x.get(Vi [p])))) ;
+		    tau = cs_cplus(tau, cs_cmult(cs_conj(Vx.get(p)), x.get(Vi [p]))) ;
 		}
 		tau = cs_cmult(tau, beta) ;			/* tau = beta*(v'*x) */
 		for (p = Vp [i] ; p < Vp [i+1] ; p++) 		/* x = x - v*tau */

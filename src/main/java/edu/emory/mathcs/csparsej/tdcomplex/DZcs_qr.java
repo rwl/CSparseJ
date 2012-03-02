@@ -67,11 +67,10 @@ public class DZcs_qr {
 		n = A.n ; Ap = A.p ; Ai = A.i ; Ax.x = A.x ;
 		q = S.q ; parent = S.parent ; pinv = S.pinv ; m2 = S.m2 ;
 		vnz = S.lnz ; rnz = S.unz ; leftmost = S.leftmost ;
-		w = new int [m2+n] ; 			/* get int workspace */
+		w = new int [m2] ; 			/* get int workspace */
 		x = new DZcsa (m2) ;			/* get double workspace */
 		N = new DZcsn () ;			/* allocate result */
-		s = w ;
-		int s_offset = m2 ;					/* s is size n */
+		s = new int [n] ; 			/* get int workspace, s is size n */
 		for (k = 0 ; k < m2 ; k++) x.set(k, cs_czero()) ; 	/* clear workspace x */
 		N.L = V = cs_spalloc(m2, n, vnz, true, false) ;  	/* allocate result V */
 		N.U = R = cs_spalloc(m2, n, rnz, true, false) ;  	/* allocate result R */
@@ -94,11 +93,11 @@ public class DZcs_qr {
 				i = leftmost [Ai [p]] ;	/* i = min(find(A(i,q))) */
 				for (len = 0 ; w [i] != k ; i = parent [i])  /* traverse up to k */
 				{
-					s [s_offset + (len++)] = i ;
+					s [len++] = i ;
 					w [i] = k ;
 				}
 				while (len > 0)
-					s [s_offset + (--top)] = s [s_offset + (--len)] ;  /* push path on stack */
+					s [--top] = s [--len] ;  /* push path on stack */
 				i = pinv [Ai [p]] ;	/* i = permuted row of A(:,col) */
 				x.set(i, Ax.get(p)) ;	/* x (i) = A(:,col) */
 				if (i > k && w [i] < k)	/* pattern of V(:,k) = x (k+1:m) */
@@ -109,7 +108,7 @@ public class DZcs_qr {
 			}
 			for (p = top ; p < n ; p++)	/* for each i in pattern of R(:,k) */
 			{
-				i = s [s_offset + p] ;	/* R(i,k) is nonzero */
+				i = s [p] ;	/* R(i,k) is nonzero */
 				cs_happly (V, i, Beta [i], x) ;  /* apply (V(i),Beta(i)) to x */
 				Ri [rnz] = i ;		/* R(i,k) = x(i) */
 				Rx.set(rnz++, x.get(i)) ;
@@ -123,8 +122,7 @@ public class DZcs_qr {
 				x.set(Vi [p], cs_czero()) ;
 			}
 			Ri [rnz] = k ;			/* R(k,k) = norm (x) */
-			double[] beta = new double[1] ;
-			beta [0] = Beta [k] ;
+			double[] beta = new double[] {Beta [k]} ;
 			Rx.set(rnz++, cs_house(Vx, p1, beta, vnz - p1)) ;  /* [v,beta]=house(x) */
 			Beta [k] = beta [0] ;
 		}

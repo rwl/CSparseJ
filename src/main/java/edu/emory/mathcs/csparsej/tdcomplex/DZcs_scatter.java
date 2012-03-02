@@ -41,8 +41,8 @@ import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cplus ;
 public class DZcs_scatter {
 
 	/**
-	 * Scatters and sums a sparse vector A(:,j) into a dense vector, x = x +
-	 * beta * A(:,j).
+	 * Scatters and sums a sparse vector A(:,j) into a dense vector,
+	 * x = x + beta * A(:,j).
 	 *
 	 * @param A
 	 *            the sparse vector is A(:,j)
@@ -66,7 +66,7 @@ public class DZcs_scatter {
 	{
 		int i, p, Ap[], Ai[], Ci[] ;
 		DZcsa Ax = new DZcsa() ;
-		if (!CS_CSC(A) || w == null || !CS_CSC(C)) return (-1) ;	/* check inputs */
+		if (!CS_CSC(A) || (w == null) || !CS_CSC(C)) return (-1) ;	/* check inputs */
 		Ap = A.p ; Ai = A.i ; Ax.x = A.x ; Ci = C.i ;
 		for (p = Ap [j]; p < Ap [j+1] ; p++)
 		{

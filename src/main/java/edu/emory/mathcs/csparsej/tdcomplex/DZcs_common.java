@@ -24,6 +24,8 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
+import java.util.Arrays;
+
 /**
  * Common data structures.
  *
@@ -89,6 +91,16 @@ public class DZcs_common {
 		{
 			x [(2 * idx)] = val [0] ;
 			x [(2 * idx) + 1] = val [1] ;
+		}
+
+		@Override
+		public String toString() {
+			String s = "DZcsa [" ;
+			for (int i = 0; i < x.length; i+=2) {
+				if (i != 0) s += ", " ;
+				s += String.format("%g+j%g", x[i], x[i + 1]) ;
+			}
+			return s + "]" ;
 		}
 	}
 

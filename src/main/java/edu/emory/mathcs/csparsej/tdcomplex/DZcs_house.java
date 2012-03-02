@@ -84,7 +84,7 @@ public class DZcs_house {
 			x.set(x_offset + 0, cs_cplus(x.get(x_offset + 0), s)) ;
 			beta [0] = 1 / cs_creal( cs_cmult(cs_conj(s), x.get(x_offset + 0)) ) ;
 		}
-		return (s) ;
+		return cs_cmult(s, -1) ;
 	}
 
 }
