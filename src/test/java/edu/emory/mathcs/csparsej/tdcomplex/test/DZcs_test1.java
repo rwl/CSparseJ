@@ -210,24 +210,6 @@ public class DZcs_test1 extends DZcs_test {
 		assert_dimensions(D, 1280, 1280, 27642, 27642, 8519.6629) ;
 	}
 
-	public void test_demo1_neumann() {
-		DZcs T, A, AT, D ;
-
-		InputStream in = get_stream(NEUMANN) ;
-
-		T = demo1_load (in) ;
-		assert_dimensions(T, 1600, 1600, 8192, 7840);
-
-		A = demo1_compress(T) ;
-		assert_dimensions(A, 1600, 1600, 7840, 7840, 14.1421) ;
-
-		AT = demo1_transpose(A) ;
-		assert_dimensions(AT, 1600, 1600, 7840, 7840, 11.3137) ;
-
-		D = demo1_multiply_add(A, AT) ;
-		assert_dimensions(D, 1600, 1600, 20004, 20004, 296.0) ;
-	}
-
 	public void test_demo1_qc324() {
 		DZcs T, A, AT, D ;
 

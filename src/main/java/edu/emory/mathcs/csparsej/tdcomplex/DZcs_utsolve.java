@@ -62,7 +62,7 @@ public class DZcs_utsolve {
 		{
 			for (p = Up [j] ; p < Up [j+1] - 1 ; p++)
 			{
-				x.set(j, cs_cminus(x.get(j), cs_conj(cs_cmult(Ux.get(p), x.get(Ui [p]))))) ;
+				x.set(j, cs_cminus(x.get(j), cs_cmult(cs_conj(Ux.get(p)), x.get(Ui [p])))) ;
 			}
 			x.set(j, cs_cdiv(x.get(j), cs_conj(Ux.get(Up [j + 1] - 1)))) ;
 		}

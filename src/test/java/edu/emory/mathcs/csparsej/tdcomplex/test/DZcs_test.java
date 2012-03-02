@@ -84,8 +84,6 @@ abstract public class DZcs_test extends TestCase {
 	/** Model of H+ in an electromagnetic field */
 	protected static final String QC324 = "qc324";
 
-	protected static final String NEUMANN = "neumann";
-
 	/** The Harwell/Boeing matrix ibm32, but with the last column removed. */
 	protected static final String C_IBM32A = "c_ibm32a";
 
@@ -156,7 +154,7 @@ abstract public class DZcs_test extends TestCase {
 		public DZcsa b ;
 		public DZcsa resid ;
 
-		public List<Double> residuals = new ArrayList<Double>() ;
+		public List<Double> norms = new ArrayList<Double>() ;
 
 		public int nb ;
 		public int ns ;
@@ -253,9 +251,11 @@ abstract public class DZcs_test extends TestCase {
 		cs_gaxpy (A, x, resid) ;			/* resid = resid + A*x  */
 
 		double r = norm (resid, m) / ((n == 0) ? 1 : (cs_norm (A) * norm (x, n) + norm (b, m))) ;
-		prob.residuals.add(r) ;
+		System.out.printf ("resid: %8.2e", r) ;
 
-		System.out.printf("resid: %8.2e\n", r) ;
+		double nrm = norm (x, n) ;
+		System.out.printf (" (norm: %8.4f, %8.4f)\n", nrm, norm (b, m)) ;
+		prob.norms.add (nrm) ;
 	}
 
 	protected static double tic()

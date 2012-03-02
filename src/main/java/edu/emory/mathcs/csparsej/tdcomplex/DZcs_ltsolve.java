@@ -62,7 +62,7 @@ public class DZcs_ltsolve {
 		{
 			for (p = Lp [j] + 1 ; p < Lp [j+1] ; p++)
 			{
-				x.set(j, cs_cminus(x.get(j), cs_conj( cs_cmult(Lx.get(p), x.get(Li [p])) ))) ;
+				x.set(j, cs_cminus(x.get(j), cs_cmult(cs_conj(Lx.get(p)), x.get(Li [p])) )) ;
 			}
 			x.set(j, cs_cdiv(x.get(j), cs_conj( Lx.get(Lp [j]) ))) ;
 		}

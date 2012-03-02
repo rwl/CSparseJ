@@ -170,10 +170,10 @@ public class DZcs_test3 extends DZcs_test {
 
 		test3(prob) ;
 
-		assertEquals(6.88e-17, prob.residuals.get(0), DELTA) ;
-		assertEquals(6.49e-17, prob.residuals.get(1), DELTA) ;
-		assertEquals(6.49e-17, prob.residuals.get(2), DELTA) ;
-		assertEquals(5.85e-17, prob.residuals.get(3), DELTA) ;
+		assertEquals(6.88e-17, prob.norms.get(0), DELTA) ;
+		assertEquals(6.49e-17, prob.norms.get(1), DELTA) ;
+		assertEquals(6.49e-17, prob.norms.get(2), DELTA) ;
+		assertEquals(5.85e-17, prob.norms.get(3), DELTA) ;
 	}
 
 	public void test_mhd1280b()
@@ -185,10 +185,10 @@ public class DZcs_test3 extends DZcs_test {
 
 		test3(prob) ;
 
-		assertEquals(1.51e-25, prob.residuals.get(0), DELTA) ;
-		assertEquals(1.75e-25, prob.residuals.get(1), DELTA) ;
-		assertEquals(1.71e-25, prob.residuals.get(2), DELTA) ;
-		assertEquals(5.85e-25, prob.residuals.get(3), DELTA) ;
+		assertEquals(1.51e-25, prob.norms.get(0), DELTA) ;
+		assertEquals(1.75e-25, prob.norms.get(1), DELTA) ;
+		assertEquals(1.71e-25, prob.norms.get(2), DELTA) ;
+		assertEquals(5.85e-25, prob.norms.get(3), DELTA) ;
 	}
 
 }

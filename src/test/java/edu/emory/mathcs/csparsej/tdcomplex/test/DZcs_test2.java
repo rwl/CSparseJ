@@ -126,8 +126,9 @@ public class DZcs_test2 extends DZcs_test {
 		assert_problem(prob, 32, 31, 123, 0, 0, 9.90) ;
 		assert_structure(prob, 1, 0, 31) ;
 
-		assertEquals(1.92e-03, prob.residuals.get(0), DELTA) ;
-		assertEquals(1.92e-03, prob.residuals.get(1), DELTA) ;
+		double x_norm = 3.9456 ;
+		assertEquals(x_norm, prob.norms.get(0), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(1), DELTA) ;
 	}
 
 	public void test_c_ibm32b()
@@ -137,11 +138,12 @@ public class DZcs_test2 extends DZcs_test {
 
 		test2(prob) ;
 
-		assert_problem(prob, 31, 32, 123, 0, 0, 1.13e+01) ;
+		assert_problem(prob, 31, 32, 123, 0, 0, 11.313) ;
 		assert_structure(prob, 1, 0, 31) ;
 
-		assertEquals(1.22e-16, prob.residuals.get(0), DELTA) ;
-		assertEquals(9.45e-17, prob.residuals.get(1), DELTA) ;
+		double x_norm = 3.7723 ;
+		assertEquals(x_norm, prob.norms.get(0), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(1), DELTA) ;
 	}
 
 	public void test_c_mbeacxc()
@@ -154,8 +156,8 @@ public class DZcs_test2 extends DZcs_test {
 		assert_problem(prob, 492, 490, 49920, 0, 0, 9.29e-01) ;
 		assert_structure(prob, 10, 8, 448) ;
 
-		assertNull(prob.residuals.get(0)) ;
-		assertNull(prob.residuals.get(1)) ;
+		assertEquals(Double.NaN, prob.norms.get(0)) ;
+		assertEquals(Double.NaN, prob.norms.get(1)) ;
 	}
 
 	public void test_c_west0067()
@@ -168,12 +170,13 @@ public class DZcs_test2 extends DZcs_test {
 		assert_problem(prob, 67, 67, 294, 0, 0, 6.17) ;
 		assert_structure(prob, 2, 1, 67) ;
 
-		assertEquals(8.16e-17, prob.residuals.get(0), DELTA) ;
-		assertEquals(5.34e-17, prob.residuals.get(1), DELTA) ;
-		assertEquals(4.54e-17, prob.residuals.get(2), DELTA) ;
-		assertEquals(5.90e-17, prob.residuals.get(3), DELTA) ;
-		assertEquals(5.28e-17, prob.residuals.get(4), DELTA) ;
-		assertEquals(4.76e-17, prob.residuals.get(5), DELTA) ;
+		double x_norm = 21.4903 ;
+		assertEquals(x_norm, prob.norms.get(0), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(1), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(2), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(3), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(4), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(5), DELTA) ;
 	}
 
 	public void test_c4()
@@ -186,16 +189,17 @@ public class DZcs_test2 extends DZcs_test {
 		assert_problem(prob, 4, 4, 10, -1, 16, 7.37e+01) ;
 		assert_structure(prob, 1, 0, 4) ;
 
-		assertEquals(5.85e-17, prob.residuals.get(0), DELTA) ;
-		assertEquals(5.85e-17, prob.residuals.get(1), DELTA) ;
+		double x_norm = 8.3862 ;
+		assertEquals(x_norm, prob.norms.get(0), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(1), DELTA) ;
 
-		assertEquals(2.29e-17, prob.residuals.get(2), DELTA) ;
-		assertEquals(2.29e-17, prob.residuals.get(3), DELTA) ;
-		assertEquals(2.29e-17, prob.residuals.get(4), DELTA) ;
-		assertEquals(2.29e-17, prob.residuals.get(5), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(2), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(3), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(4), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(5), DELTA) ;
 
-		assertEquals(6.88e-17, prob.residuals.get(6), DELTA) ;
-		assertEquals(6.88e-17, prob.residuals.get(7), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(6), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(7), DELTA) ;
 	}
 
 	public void test_czero()
@@ -209,8 +213,8 @@ public class DZcs_test2 extends DZcs_test {
 		assert_dropped(prob, 1, 0) ;
 		assert_structure(prob, 2, 0, 0) ;
 
-		assertNull(prob.residuals.get(0)) ;
-		assertNull(prob.residuals.get(1)) ;
+		assertEquals(Double.NaN, prob.norms.get(0)) ;
+		assertEquals(Double.NaN, prob.norms.get(1)) ;
 	}
 
 	public void test_mhd1280b()
@@ -220,31 +224,18 @@ public class DZcs_test2 extends DZcs_test {
 
 		test2(prob) ;
 
-		assert_problem(prob, 1280, 1280, 11963, -1, 22646, 8.00e+01) ;
+		assert_problem(prob, 1280, 1280, 11963, -1, 22646, 79.9740) ;
 		assert_dropped(prob, 0, 66) ;
 		assert_structure(prob, 20, 14, 1280) ;
 
-		assertEquals(6.15e-25, prob.residuals.get(0), DELTA) ;
-		assertEquals(2.33e-25, prob.residuals.get(1), DELTA) ;
-		assertEquals(3.96e-25, prob.residuals.get(2), DELTA) ;
-		assertEquals(3.96e-25, prob.residuals.get(3), DELTA) ;
-		assertEquals(1.58e-25, prob.residuals.get(4), DELTA) ;
-	}
-
-	public void test_neumann()
-	{
-		InputStream in = get_stream (NEUMANN) ;
-		DZproblem prob = get_problem (in, DROP_TOL) ;
-
-		test2(prob) ;
-
-		assert_problem(prob, 1600, 1600, 7840, 0, 0, 1.41e+01) ;
-		assert_structure(prob, 1, 0, 1600) ;
-
-		assertEquals(1.04e-15, prob.residuals.get(0), DELTA) ;
-		assertEquals(3.55e-16, prob.residuals.get(1), DELTA) ;
-		assertEquals(4.03e-16, prob.residuals.get(2), DELTA) ;
-		assertEquals(4.03e-16, prob.residuals.get(3), DELTA) ;
+		double delta = 1e-02 ;
+		double x_norm = 76270143066.4161 ;
+		assertEquals(x_norm, prob.norms.get(0), delta) ;
+		x_norm = 76270143066.4197 ;
+		assertEquals(x_norm, prob.norms.get(1), delta) ;
+		assertEquals(x_norm, prob.norms.get(2), delta) ;
+		assertEquals(x_norm, prob.norms.get(3), delta) ;
+		assertEquals(x_norm, prob.norms.get(4), delta) ;
 	}
 
 	public void test_qc324()
@@ -257,12 +248,13 @@ public class DZcs_test2 extends DZcs_test {
 		assert_problem(prob, 324, 324, 26730, 0, 0, 1.71) ;
 		assert_structure(prob, 1, 0, 324) ;
 
-		assertEquals(9.42e-17, prob.residuals.get(0), DELTA) ;
-		assertEquals(8.94e-17, prob.residuals.get(1), DELTA) ;
-		assertEquals(6.01e-17, prob.residuals.get(2), DELTA) ;
-		assertEquals(4.05e-17, prob.residuals.get(3), DELTA) ;
-		assertEquals(4.71e-17, prob.residuals.get(4), DELTA) ;
-		assertEquals(4.71e-17, prob.residuals.get(5), DELTA) ;
+		double x_norm = 6355.8643 ;
+		assertEquals(x_norm, prob.norms.get(0), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(1), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(2), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(3), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(4), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(5), DELTA) ;
 	}
 
 	public void test_t2()
@@ -272,15 +264,16 @@ public class DZcs_test2 extends DZcs_test {
 
 		test2(prob) ;
 
-		assert_problem(prob, 4, 4, 10, 0, 0, 1.06e+02) ;
+		assert_problem(prob, 4, 4, 10, 0, 0, 106.0752) ;
 		assert_structure(prob, 1, 0, 4) ;
 
-		assertEquals(2.06e-17, prob.residuals.get(0), DELTA) ;
-		assertEquals(6.36e-18, prob.residuals.get(1), DELTA) ;
-		assertEquals(4.88e-18, prob.residuals.get(2), DELTA) ;
-		assertEquals(2.11e-18, prob.residuals.get(3), DELTA) ;
-		assertEquals(6.36e-18, prob.residuals.get(4), DELTA) ;
-		assertEquals(2.11e-18, prob.residuals.get(5), DELTA) ;
+		double x_norm = 0.6623 ;
+		assertEquals(x_norm, prob.norms.get(0), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(1), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(2), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(3), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(4), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(5), DELTA) ;
 	}
 
 	public void test_t3()
@@ -293,8 +286,9 @@ public class DZcs_test2 extends DZcs_test {
 		assert_problem(prob, 3, 4, 12, 0, 0, 3.06) ;
 		assert_structure(prob, 1, 0, 3) ;
 
-		assertEquals(1.05e-16, prob.residuals.get(0), DELTA) ;
-		assertEquals(1.05e-16, prob.residuals.get(1), DELTA) ;
+		double x_norm = 1.5357 ;
+		assertEquals(x_norm, prob.norms.get(0), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(1), DELTA) ;
 	}
 
 	public void test_t4()
@@ -307,14 +301,13 @@ public class DZcs_test2 extends DZcs_test {
 		assert_problem(prob, 2, 2, 3, 1, 4, 2.83) ;
 		assert_structure(prob, 1, 0, 2) ;
 
-		assertEquals(5.65e-17, prob.residuals.get(0), DELTA) ;
-		assertEquals(5.65e-17, prob.residuals.get(1), DELTA) ;
-		assertEquals(0.0, prob.residuals.get(2), DELTA) ;
-		assertEquals(0.0, prob.residuals.get(3), DELTA) ;
-		assertEquals(0.0, prob.residuals.get(4), DELTA) ;
-		assertEquals(0.0, prob.residuals.get(5), DELTA) ;
-		assertNull(prob.residuals.get(6)) ;
-		assertNull(prob.residuals.get(7)) ;
+		double x_norm = 0.9014 ;
+		assertEquals(x_norm, prob.norms.get(0), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(1), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(2), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(3), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(4), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(5), DELTA) ;
 	}
 
 	public void test_young1c()
@@ -324,15 +317,16 @@ public class DZcs_test2 extends DZcs_test {
 
 		test2(prob) ;
 
-		assert_problem(prob, 841, 841, 4089, 0, 0, 7.30e+02) ;
+		assert_problem(prob, 841, 841, 4089, 0, 0, 730.46) ;
 		assert_structure(prob, 1, 0, 841) ;
 
-		assertEquals(1.81e-16, prob.residuals.get(0), DELTA) ;
-		assertEquals(1.57e-16, prob.residuals.get(1), DELTA) ;
-		assertEquals(1.39e-16, prob.residuals.get(2), DELTA) ;
-		assertEquals(2.95e-16, prob.residuals.get(3), DELTA) ;
-		assertEquals(3.37e-16, prob.residuals.get(4), DELTA) ;
-		assertEquals(3.37e-16, prob.residuals.get(5), DELTA) ;
+		double x_norm = 0.0509 ;
+		assertEquals(x_norm, prob.norms.get(0), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(1), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(2), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(3), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(4), DELTA) ;
+		assertEquals(x_norm, prob.norms.get(5), DELTA) ;
 	}
 
 }

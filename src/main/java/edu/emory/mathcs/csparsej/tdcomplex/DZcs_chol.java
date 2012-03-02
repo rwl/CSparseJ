@@ -103,7 +103,7 @@ public class DZcs_chol {
 				{
 					x.set(Li [p], cs_cminus (x.get(Li [p]), cs_cmult (Lx.get(p), lki))) ;
 				}
-				d = cs_cminus (d, cs_conj(lki)) ;	/* d = d - L(k,i)*L(k,i) */
+				d = cs_cminus (d, cs_cmult (lki, cs_conj (lki))) ;	/* d = d - L(k,i)*L(k,i) */
 				p = c [i]++ ;
 				Li [p] = k ;			/* store L(k,i) in column i */
 				Lx.set(p, cs_conj (lki)) ;
