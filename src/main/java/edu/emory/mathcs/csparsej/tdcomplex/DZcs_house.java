@@ -72,7 +72,7 @@ public class DZcs_house {
 		if (cs_cequal(s, cs_czero()))
 		{
 			beta [0] = 0.0 ;
-			x.set(x_offset + 0, cs_cone()) ;
+			x.set(x_offset + 0, 1.0, 0.0) ;
 		}
 		else
 		{

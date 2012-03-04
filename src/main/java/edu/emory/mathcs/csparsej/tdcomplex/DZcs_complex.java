@@ -154,7 +154,7 @@ public class DZcs_complex {
 		return new double [] {x [0] + y [0], x [1] + y [1]} ;
 	}
 
-	public static final double [] cs_cminus(double [] x, double [] y)
+	public static final double [] cs_cminus(final double [] x, final double [] y)
 	{
 		return new double [] {x [0] - y [0], x [1] - y [1]} ;
 	}

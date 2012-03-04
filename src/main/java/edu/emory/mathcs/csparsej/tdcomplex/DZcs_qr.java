@@ -71,7 +71,7 @@ public class DZcs_qr {
 		x = new DZcsa (m2) ;			/* get double workspace */
 		N = new DZcsn () ;			/* allocate result */
 		s = new int [n] ; 			/* get int workspace, s is size n */
-		for (k = 0 ; k < m2 ; k++) x.set(k, cs_czero()) ; 	/* clear workspace x */
+		//for (k = 0 ; k < m2 ; k++) x.set(k, cs_czero()) ; 	/* clear workspace x */
 		N.L = V = cs_spalloc(m2, n, vnz, true, false) ;  	/* allocate result V */
 		N.U = R = cs_spalloc(m2, n, rnz, true, false) ;  	/* allocate result R */
 		N.B = Beta = new double [n] ;				/* allocate result Beta */
@@ -99,7 +99,7 @@ public class DZcs_qr {
 				while (len > 0)
 					s [--top] = s [--len] ;  /* push path on stack */
 				i = pinv [Ai [p]] ;	/* i = permuted row of A(:,col) */
-				x.set(i, Ax.get(p)) ;	/* x (i) = A(:,col) */
+				x.set(i, Ax.real(p), Ax.imag(p)) ;	/* x (i) = A(:,col) */
 				if (i > k && w [i] < k)	/* pattern of V(:,k) = x (k+1:m) */
 				{
 					Vi [vnz++] = i ;  /* add i to pattern of V(:,k) */
@@ -111,15 +111,15 @@ public class DZcs_qr {
 				i = s [p] ;	/* R(i,k) is nonzero */
 				cs_happly (V, i, Beta [i], x) ;  /* apply (V(i),Beta(i)) to x */
 				Ri [rnz] = i ;		/* R(i,k) = x(i) */
-				Rx.set(rnz++, x.get(i)) ;
-				x.set(i, cs_czero()) ;
+				Rx.set(rnz++, x.real(i), x.imag(i)) ;
+				x.set(i, 0.0, 0.0) ;
 				if (parent [i] == k)
 					vnz = cs_scatter (V, i, cs_czero(), w, null, k, V, vnz) ;
 			}
 			for (p = p1 ; p < vnz ; p++)	/* gather V(:,k) = x */
 			{
-				Vx.set(p, x.get(Vi [p])) ;
-				x.set(Vi [p], cs_czero()) ;
+				Vx.set(p, x.real(Vi [p]), x.imag(Vi [p])) ;
+				x.set(Vi [p], 0.0, 0.0) ;
 			}
 			Ri [rnz] = k ;			/* R(k,k) = norm (x) */
 			double[] beta = new double[] {Beta [k]} ;

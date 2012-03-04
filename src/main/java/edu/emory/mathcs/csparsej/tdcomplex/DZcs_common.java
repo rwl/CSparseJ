@@ -24,8 +24,6 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
-import java.util.Arrays;
-
 /**
  * Common data structures.
  *
@@ -77,9 +75,18 @@ public class DZcs_common {
 		 * @param idx
 		 * @return
 		 */
-		public double [] get(int idx)
+		public double[] get(final int idx)
 		{
-			return new double [] {x [2 * idx], x [(2 * idx) + 1]} ;
+			int offset = 2 * idx ;
+			return new double [] {x [offset], x [offset + 1]} ;
+		}
+
+		public double real(final int idx) {
+			return x [2 * idx] ;
+		}
+
+		public double imag(final int idx) {
+			return x [(2 * idx) + 1] ;
 		}
 
 		/**
@@ -87,10 +94,19 @@ public class DZcs_common {
 		 * @param idx
 		 * @param val
 		 */
-		public void set(int idx, double [] val)
+		public void set(final int idx, final double [] val)
 		{
-			x [(2 * idx)] = val [0] ;
-			x [(2 * idx) + 1] = val [1] ;
+			int offset = 2 * idx ;
+
+			x [offset] = val [0] ;
+			x [offset + 1] = val [1] ;
+		}
+
+		public void set(final int idx, final double re, final double im) {
+			int offset = 2 * idx ;
+
+			x [offset] = re ;
+			x [offset + 1] = im ;
 		}
 
 		@Override
@@ -152,15 +168,18 @@ public class DZcs_common {
 
 		}
 
-		public double [] get(int idx)
+		public double [] get(final int idx)
 		{
-			return new double [] {x [2 * idx], x [(2 * idx) + 1]} ;
+			int offset = 2 * idx ;
+			return new double [] {x [offset], x [offset + 1]} ;
 		}
 
-		public void set(int idx, double [] val)
+		public void set(final int idx, final double [] val)
 		{
-			x [(2 * idx)] = val [0] ;
-			x [(2 * idx) + 1] = val [1] ;
+			int offset = 2 * idx ;
+
+			x [offset] = val [0] ;
+			x [offset + 1] = val [1] ;
 		}
 
 	};
