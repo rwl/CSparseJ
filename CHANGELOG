@@ -1,0 +1,8 @@
+CSparseJ changelog
+
+1.0:	June 13, 2009
+	- Initial release.
+
+1.1.0   March 22, 2012
+    - Complex number support.
+    - Maven project.
