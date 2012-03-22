@@ -9,3 +9,4 @@ java -cp ../target/csparsej-1.1.0.jar edu.emory.mathcs.csparsej.tfloat.demo.Scs_
 java -cp ../target/csparsej-1.1.0.jar edu.emory.mathcs.csparsej.tfloat.demo.Scs_demo2 ../src/main/resources/edu/emory/mathcs/csparsej/bcsstk16
 java -cp ../target/csparsej-1.1.0.jar edu.emory.mathcs.csparsej.tfloat.demo.Scs_demo3 ../src/main/resources/edu/emory/mathcs/csparsej/bcsstk01
 java -cp ../target/csparsej-1.1.0.jar edu.emory.mathcs.csparsej.tfloat.demo.Scs_demo3 ../src/main/resources/edu/emory/mathcs/csparsej/bcsstk16
+

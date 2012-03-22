@@ -10,3 +10,4 @@ java -cp ../target/csparsej-1.1.0.jar edu.emory.mathcs.csparsej.tdouble.demo.Dcs
 java -cp ../target/csparsej-1.1.0.jar edu.emory.mathcs.csparsej.tdouble.demo.Dcs_demo2 ../src/main/resources/edu/emory/mathcs/csparsej/bcsstk16
 java -cp ../target/csparsej-1.1.0.jar edu.emory.mathcs.csparsej.tdouble.demo.Dcs_demo3 ../src/main/resources/edu/emory/mathcs/csparsej/bcsstk01
 java -cp ../target/csparsej-1.1.0.jar edu.emory.mathcs.csparsej.tdouble.demo.Dcs_demo3 ../src/main/resources/edu/emory/mathcs/csparsej/bcsstk16
+
