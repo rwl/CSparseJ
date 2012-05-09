@@ -24,6 +24,9 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
 
@@ -49,36 +52,37 @@ public class DZcs_print {
 	 *            print all of A if false, a few entries otherwise
 	 * @return true if successful, false on error
 	 */
-	public static boolean cs_print(DZcs A, boolean brief)
+	public static boolean cs_print(DZcs A, boolean brief, OutputStream output)
 	{
 		int p, j, m, n, nzmax, nz, Ap[], Ai[] ;
 		DZcsa Ax = new DZcsa() ;
+		PrintStream out = new PrintStream(output);
 		if (A == null)
 		{
-		    System.out.print("(null)\n") ;
+		    out.print("(null)\n") ;
 		    return (false) ;
 		}
 		m = A.m ; n = A.n ; Ap = A.p ; Ai = A.i ; Ax.x = A.x ;
 		nzmax = A.nzmax ; nz = A.nz ;
-		System.out.printf("CXSparseJ Version %d.%d.%d, %s.  %s\n",
+		/*out.printf("CXSparseJ Version %d.%d.%d, %s.  %s\n",
 			DZcs_common.CS_VER, DZcs_common.CS_SUBVER, DZcs_common.CS_SUBSUB,
-			DZcs_common.CS_DATE, DZcs_common.CS_COPYRIGHT) ;
+			DZcs_common.CS_DATE, DZcs_common.CS_COPYRIGHT) ;*/
 		if (nz < 0)
 		{
-			System.out.printf("%d-by-%d, nzmax: %d nnz: %d, 1-norm: %g\n", m, n,
+			out.printf("%d-by-%d, nzmax: %d nnz: %d, 1-norm: %g\n", m, n,
 				nzmax, Ap[n], cs_norm (A)) ;
 			for (j = 0 ; j < n ; j++)
 			{
-				System.out.printf("    col %d : locations %d to %d\n",
+				out.printf("    col %d : locations %d to %d\n",
 					j, Ap [j], Ap [j+1] - 1) ;
 				for (p = Ap [j] ; p < Ap [j+1] ; p++)
 				{
-					System.out.printf("      %d : (%g, %g)\n", Ai [p],
+					out.printf("      %d : (%g, %g)\n", Ai [p],
 						Ax.x != null ? cs_creal (Ax.get(p)) : 1,
 						Ax.x != null ? cs_cimag (Ax.get(p)) : 0) ;
 					if (brief && p > 20)
 					{
-						System.out.print("  ...\n") ;
+						out.print("  ...\n") ;
 						return (true) ;
 					}
 				}
@@ -86,21 +90,26 @@ public class DZcs_print {
 		}
 		else
 		{
-			System.out.printf("triplet: %d-by-%d, nzmax: %d nnz: %d\n",
+			out.printf("triplet: %d-by-%d, nzmax: %d nnz: %d\n",
 				m, n, nzmax, nz) ;
 			for (p = 0 ; p < nz ; p++)
 			{
-				System.out.printf("    %d %d : (%g, %g)\n", Ai [p], Ap [p],
+				out.printf("    %d %d : (%g, %g)\n", Ai [p], Ap [p],
 					Ax.x != null ? cs_creal (Ax.get(p)) : 1,
 					Ax.x != null ? cs_cimag (Ax.get(p)) : 0) ;
 				if (brief && p > 20)
 				{
-					System.out.print("  ...\n") ;
+					out.print("  ...\n") ;
 					return (true) ;
 				}
 			}
 		}
 		return (true) ;
+	}
+
+	public static boolean cs_print(DZcs A, boolean brief)
+	{
+		return cs_print(A, brief, System.out);
 	}
 
 }

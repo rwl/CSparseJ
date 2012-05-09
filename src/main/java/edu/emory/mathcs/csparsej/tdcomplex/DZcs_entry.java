@@ -54,9 +54,14 @@ public class DZcs_entry {
 	 */
 	public static boolean cs_entry(DZcs T, int i, int j, double [] x)
 	{
+		return cs_entry(T, i, j, x [0], x [1]);
+	}
+
+	public static boolean cs_entry(DZcs T, int i, int j, double re, double im)
+	{
 		if (!CS_TRIPLET (T) || i < 0 || j < 0) return (false) ;	/* check inputs */
 		if ((T.nz >= T.nzmax) && !cs_sprealloc (T, 2*(T.nzmax))) return (false) ;
-		if (T.x != null) T.set(T.nz, x) ;
+		if (T.x != null) T.set(T.nz, re, im) ;
 		T.i [T.nz] = i ;
 		T.p [T.nz++] = j ;
 		T.m = Math.max(T.m, i + 1) ;

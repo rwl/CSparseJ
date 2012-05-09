@@ -24,6 +24,10 @@
 
 package edu.emory.mathcs.csparsej.tdcomplex;
 
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_print.cs_print;
+
 /**
  * Common data structures.
  *
@@ -129,6 +133,11 @@ public class DZcs_common {
 	{
 
 		/**
+		 * show a few entries in string representation
+		 */
+		public static boolean BRIEF_PRINT = true;
+
+		/**
 		 * maximum number of entries
 		 */
 		public int nzmax ;
@@ -174,12 +183,26 @@ public class DZcs_common {
 			return new double [] {x [offset], x [offset + 1]} ;
 		}
 
-		public void set(final int idx, final double [] val)
+		public void set(final int idx, final double [] val) {
+			set(idx, val [0], val [1]);
+		}
+
+		public void set(final int idx, final double re, final double im)
 		{
 			int offset = 2 * idx ;
 
-			x [offset] = val [0] ;
-			x [offset + 1] = val [1] ;
+			x [offset] = re ;
+			x [offset + 1] = im ;
+		}
+
+		public String toString() {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			cs_print(this, BRIEF_PRINT, out);
+			try {
+				return new String(out.toByteArray(), "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				return out.toString();
+			}
 		}
 
 	};

@@ -27,7 +27,6 @@ package edu.emory.mathcs.csparsej.tdcomplex;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_czero ;
-import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cone ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cplus ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cmult ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cdiv ;

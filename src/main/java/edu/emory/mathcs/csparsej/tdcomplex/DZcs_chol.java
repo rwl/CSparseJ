@@ -28,8 +28,6 @@ import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsa;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcs;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcsn;
 import edu.emory.mathcs.csparsej.tdcomplex.DZcs_common.DZcss;
-import edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex;
-
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.CS_CSC ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.cs_spalloc ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_util.cs_ndone ;
@@ -39,7 +37,6 @@ import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_czero ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cdiv ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cminus ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_cmult ;
-import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_csquare ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_conj ;
 import static edu.emory.mathcs.csparsej.tdcomplex.DZcs_complex.cs_csqrt ;
 
