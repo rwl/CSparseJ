@@ -95,6 +95,7 @@ public class DZcs_maxtrans {
 	 *            0: natural, -1: reverse, randomized otherwise
 	 * @return row and column matching, size m+n
 	 */
+	@SuppressWarnings("unused")
 	public static int[] cs_maxtrans(DZcs A, int seed)		/*[jmatch [0..m-1]; imatch [0..n-1]]*/
 	{
 		int i, j, k, n, m, p, n2 = 0, m2 = 0, Ap[], jimatch[], w[], cheap[], js[], is[],

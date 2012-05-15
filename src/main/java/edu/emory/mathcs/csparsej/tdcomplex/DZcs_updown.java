@@ -60,6 +60,7 @@ public class DZcs_updown {
 	 *            the elimination tree of L
 	 * @return true if successful, false on error
 	 */
+	@SuppressWarnings("unused")
 	public static boolean cs_updown(DZcs L, int sigma, DZcs C, int[] parent)
 	{
 		int n, p, f, j, Lp[], Li[], Cp[], Ci[] ;

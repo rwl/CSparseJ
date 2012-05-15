@@ -46,6 +46,7 @@ public class DZcs_randperm {
 	 *            0: natural, -1: reverse, random p otherwise
 	 * @return p, null on error or for natural order
 	 */
+	@SuppressWarnings("unused")
 	public static int[] cs_randperm(int n, int seed)
 	{
 		int p[], k, j, t ;

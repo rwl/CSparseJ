@@ -42,6 +42,7 @@ public class DZcs_pinv {
 	 *            length of p
 	 * @return pinv, null on error
 	 */
+	@SuppressWarnings("unused")
 	public static int[] cs_pinv(int[] p, int n)
 	{
 		int k, pinv[] ;

@@ -54,6 +54,7 @@ public class DZcs_schol {
 	 *            column-compressed matrix
 	 * @return symbolic analysis for Cholesky, null on error
 	 */
+	@SuppressWarnings("unused")
 	public static DZcss cs_schol(int order, DZcs A)
 	{
 		int n, c[], post[], P[] ;
