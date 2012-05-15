@@ -81,6 +81,9 @@
         <configuration>
           <includes>
             <include>**/test/DZcs_*.java</include>
+            <include>**/test/SZcs_*.java</include>
+            <include>**/test/Dcs_*.java</include>
+            <include>**/test/Scs_*.java</include>
           </includes>
         </configuration>
       </plugin>
