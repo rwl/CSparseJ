@@ -43,13 +43,14 @@ public class Dcs_load {
     /**
      * Loads a triplet matrix T from a file. Each line of the file contains
      * three values: a row index i, a column index j, and a numerical value aij.
-     * The file is zero-based.
      *
      * @param fileName
      *            file name
+     * @param base
+     *            index base
      * @return T if successful, null on error
      */
-    public static Dcs cs_load(InputStream in) {
+    public static Dcs cs_load(InputStream in, int base) {
         int i, j;
         double x;
         Dcs T;
@@ -64,8 +65,8 @@ public class Dcs_load {
                 if (tokens.length != 3) {
                     return null;
                 }
-                i = Integer.parseInt(tokens[0]);
-                j = Integer.parseInt(tokens[1]);
+                i = Integer.parseInt(tokens[0]) - base;
+                j = Integer.parseInt(tokens[1]) - base;
                 x = Double.parseDouble(tokens[2]);
                 if (!Dcs_entry.cs_entry(T, i, j, x))
                     return (null);
@@ -76,5 +77,12 @@ public class Dcs_load {
             return (null);
         }
         return (T);
+    }
+
+    /**
+     * Loads a triplet matrix T from a file. The file is zero-based.
+     */
+    public static Dcs cs_load(InputStream in) {
+	    return cs_load(in, 0) ;
     }
 }

@@ -125,7 +125,7 @@ abstract public class Dcs_test extends TestCase {
 	protected static InputStream get_stream(String name) {
 		try
 		{
-			return Dcs_test1.class.getResource(DIR + "/" + name).openStream() ;
+			return Dcs_test.class.getResource(DIR + "/" + name).openStream() ;
 		}
 		catch (IOException e)
 		{
@@ -327,15 +327,17 @@ abstract public class Dcs_test extends TestCase {
 	 *            file name
 	 * @param tol
 	 *            drop tolerance
+	 * @param base
+	 *            file index base
 	 * @return problem
 	 */
-	protected static Dproblem get_problem(InputStream in, double tol)
+	protected static Dproblem get_problem(InputStream in, double tol, int base)
 	{
 		Dcs T, A, C ;
 		int sym, m, n, mn, nz1, nz2 ;
 		Dproblem prob ;
 		prob = new Dproblem() ;
-		T = cs_load (in) ;				/* load triplet matrix T from a file */
+		T = cs_load (in, base) ;			/* load triplet matrix T from a file */
 		prob.A = A = cs_compress (T) ;			/* A = compressed-column form of T */
 		T = null ;					/* clear T */
 		if (!cs_dupl (A)) return (null) ;		/* sum up duplicates */
@@ -358,6 +360,11 @@ abstract public class Dcs_test extends TestCase {
 		prob.x = new double [mn] ;
 		prob.resid = new double [mn] ;
 		return prob ;
+	}
+
+	protected static Dproblem get_problem(InputStream in, double tol)
+	{
+		return get_problem(in, tol, 0) ;
 	}
 
 }
