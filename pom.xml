@@ -35,13 +35,11 @@
   </developers>
 
   <distributionManagement>
-    <!-- use the following if you're not using a snapshot version. -->
     <repository>
       <id>sonatype-nexus-staging</id>
       <name>Sonatype OSS Staging Repository</name>
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
     </repository>
-    <!-- use the following if you ARE using a snapshot version. -->
     <snapshotRepository>
       <id>sonatype-nexus-snapshots</id>
       <name>Sonatype OSS Snapshot Repository</name>
