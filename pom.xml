@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.sourceforge.csparsej</groupId>
   <artifactId>csparsej</artifactId>
-  <version>1.1.1-SNAPSHOT</version>
+  <version>1.1.1</version>
   <name>CSparseJ</name>
   <description>CSparseJ is a Java port of CSparse: a Concise Sparse matrix package.</description>
   <url>http://sourceforge.net/projects/csparsej/</url>
@@ -19,6 +19,7 @@
     <url>git@github.com:rwl/CSparseJ.git</url>
     <connection>scm:git:git@github.com:rwl/CSparseJ.git</connection>
     <developerConnection>scm:git:git@github.com:rwl/CSparseJ.git</developerConnection>
+    <tag>csparsej-1.1.1</tag>
   </scm>
 
   <developers>
